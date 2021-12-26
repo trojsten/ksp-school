@@ -1,0 +1,17 @@
+{
+  "name": "ksp-school",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tailwindcss -i ./css/tailwind.css -o ./school/static/app.css --watch",
+    "build": "tailwindcss -i ./css/tailwind.css -o ./school/static/app.css --minify"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.5",
+    "tailwindcss": "^3.0.7"
+  }
+}

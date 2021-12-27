@@ -16,6 +16,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'social_django',
+    'school.users',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +54,7 @@ DATABASES = {
     'default': env.db(),
 }
 
+AUTH_USER_MODEL = 'users.User'
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -66,6 +69,13 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+AUTHENTICATION_BACKENDS = [
+    'school.users.backends.TrojstenOAuth2',
+]
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
+SOCIAL_AUTH_TROJSTEN_KEY = env('TROJSTEN_AUTH_CLIENT')
+SOCIAL_AUTH_TROJSTEN_SECRET = env('TROJSTEN_AUTH_SECRET')
+LOGIN_URL = '/auth/login/'
 
 LANGUAGE_CODE = 'sk-sk'
 TIME_ZONE = 'Europe/Bratislava'

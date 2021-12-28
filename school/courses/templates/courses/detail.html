@@ -23,7 +23,7 @@
             {% for layer in layers %}
                 <div class="gap-2 flex flex-col">
                     {% for lesson in layer %}
-                    <a href="#" class="px-3 py-2 border border-gray-600 bg-gray-800 rounded-md flex items-center gap-2">
+                    <a href="{% url 'lesson' course.slug lesson.slug %}" class="px-3 py-2 border border-gray-600 bg-gray-800 rounded-md flex items-center gap-2">
                         {{ lesson.name }}
                         <i class="w-4 h-4 ml-auto text-gray-500" data-feather="x"></i>
                     </a>

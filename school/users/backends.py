@@ -1,5 +1,4 @@
 from django.utils.http import urlencode
-
 from social_core.backends.oauth import BaseOAuth2
 
 

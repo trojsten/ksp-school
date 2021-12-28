@@ -20,9 +20,9 @@ import school.pages.views as pages
 from school.users.views import login
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('auth/', include('social_django.urls', namespace='social')),
-    path('auth/login/', login),
-    path('', pages.HomepageView.as_view()),
-    path('pages/<slug>/', pages.PageView.as_view()),
+    path("admin/", admin.site.urls),
+    path("auth/", include("social_django.urls", namespace="social")),
+    path("auth/login/", login),
+    path("", pages.HomepageView.as_view()),
+    path("pages/<slug>/", pages.PageView.as_view()),
 ]

@@ -1,0 +1,10 @@
+{% extends 'common/base.html' %}
+{% load markdownify %}
+
+{% block title %}{{ page.name }} {{ block.super }}{% endblock %}
+
+{% block body %}
+    <div class="prose prose-invert mx-auto px-6 py-8 lg:py-12">
+        {{ page.content|markdownify }}
+    </div>
+{% endblock %}

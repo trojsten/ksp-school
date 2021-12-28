@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'social_django',
     'school.users',
+    'school.pages',
 ]
 
 MIDDLEWARE = [

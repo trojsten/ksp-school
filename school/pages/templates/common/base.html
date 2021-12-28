@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}| KSP School{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'app.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block meta %}{% endblock %}
+</head>
+<body class="bg-gray-900">
+    <nav class="bg-gray-700 border-b border-gray-500 py-4 text-gray-300 px-4 flex-none flex items-center">
+        <a href="/">KSP School</a>
+
+        <div class="ml-auto flex gap-1.5 items-center">
+            {% if user.is_authenticated %}
+                <img class="w-6 h-6 bg-gray-100 rounded-full shadow-inner" src="https://i.pravatar.cc/64">
+                <span class="font-medium text-sm">{{ user.get_full_name }}</span>
+                <i data-feather="chevron-down" class="w-4 h-4"></i>
+            {% else %}
+                <a href="#">Prihlásiť sa</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    {% block body %}{% endblock %}
+
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script>feather.replace()</script>
+</body>

@@ -1,5 +1,8 @@
 from django.conf import settings
 from django.db import models
+from judge_client.client import Protocol
+
+from school.problems.services import get_judge_client
 
 
 class Problem(models.Model):
@@ -32,3 +35,8 @@ class Submit(models.Model):
     language = models.CharField(max_length=16, verbose_name="jazyk")
     protocol = models.TextField(blank=True, verbose_name="protokol")
     result = models.CharField(blank=True, max_length=16, verbose_name="verdikt")
+
+    @property
+    def protocol_object(self) -> Protocol:
+        client = get_judge_client()
+        return client.parse_protocol(self.protocol, 100)

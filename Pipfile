@@ -10,6 +10,7 @@ psycopg2-binary = "~=2.9.2"
 social-auth-app-django = "~=5.0.0"
 markdown = "~=3.3.6"
 pillow = "~=8.4.0"
+trojsten-judge-client = "~=1.0.2"
 
 [dev-packages]
 black = "~=21.12b0"

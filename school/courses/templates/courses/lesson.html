@@ -1,4 +1,5 @@
 {% extends 'common/base.html' %}
+{% load submits %}
 {% load markdownify %}
 
 {% block title %}{{ item.name }} {{ block.super }}{% endblock %}
@@ -37,11 +38,45 @@
 
         <div class="grow px-6 py-8">
             {% if item.lesson_material %}
-            <div class="mx-auto prose prose-invert">
-                <h1>{{ item.lesson_material.name }}</h1>
+                <div class="mx-auto prose prose-invert">
+                    <h1>{{ item.lesson_material.name }}</h1>
 
-                {{ item.lesson_material.content|markdownify }}
-            </div>
+                    {{ item.lesson_material.content|markdownify }}
+                </div>
+            {% elif item.problem %}
+                <div class="mx-auto prose prose-invert">
+                    <h1>{{ item.problem.name }}</h1>
+
+                    {{ item.problem.content|markdownify }}
+                </div>
+
+                <div class="max-w-prose mx-auto my-6">
+                    {% if user.is_authenticated %}
+                        <h2 class="text-white font-bold text-2xl">Odovzávanie programu</h2>
+                        <div class="text-gray-300">aa</div>
+
+                        {% if submits %}
+                        <h2 class="text-white font-bold text-2xl mt-10 mb-4">Posledné submity</h2>
+
+                        {% thermometers submits.0 %}
+
+                        {% for submit in submits %}
+                        <div class="flex bg-gray-800 text-gray-300 px-4 py-3 rounded-md items-center">
+                            <div>{{ submit.created_at }}</div>
+                            <div class="ml-auto flex gap-3 items-center">
+                                <span class="text-sm">24 ms</span>
+                                <div class="bg-red-600 text-white font-bold px-2 py-1 rounded-md">{{ submit.result }}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                        {% endif %}
+                    {% else %}
+                        <div class="w-full rounded-md px-4 py-3 bg-red-900 border border-red-600 text-white">
+                            Ak chceš riešiť túto úlohu, musíš sa najprv <a href="#" class="underline hover:text-red-300">prihlásiť</a>.
+                        </div>
+                    {% endif %}
+                </div>
             {% endif %}
 
             <div class="max-w-prose mx-auto flex my-6">

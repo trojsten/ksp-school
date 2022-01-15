@@ -12,13 +12,25 @@
     <nav class="bg-gray-700 border-b border-gray-500 py-4 text-gray-300 px-4 flex-none flex items-center">
         <a href="/">KSP School</a>
 
-        <div class="ml-auto flex gap-1.5 items-center">
+        <div class="ml-auto text-sm">
             {% if user.is_authenticated %}
-                <img class="w-6 h-6 bg-gray-100 rounded-full shadow-inner" src="https://i.pravatar.cc/64">
-                <span class="font-medium text-sm">{{ user.get_full_name }}</span>
-                <i data-feather="chevron-down" class="w-4 h-4"></i>
+            <div class="relative select-none" x-data="{ open: false }">
+                <button class="flex gap-1.5 items-center cursor-pointer" id="main-nav-dropdown"
+                        x-on:click="open = !open" :aria-expanded="open" aria-controls="main-nav-dropdown-tray">
+                    <img class="w-6 h-6 bg-gray-100 rounded-full shadow-inner" src="https://i.pravatar.cc/64">
+                    <span class="font-medium">{{ user.get_full_name }}</span>
+                    <i data-feather="chevron-down" class="w-4 h-4"></i>
+                </button>
+
+                <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-800 border border-gray-600 text-white text-sm"
+                     id="main-nav-dropdown-tray" x-show="open" x-on:click.outside="open = false">
+                    <div class="py-1" role="none">
+                        <a href="{% url 'logout' %}" class="hover:bg-gray-700 block px-4 py-2" role="menuitem" tabindex="-1">Odhlásiť sa</a>
+                    </div>
+                </div>
+            </div>
             {% else %}
-                <a href="#">Prihlásiť sa</a>
+                <a href="{% url 'login' %}">Prihlásiť sa</a>
             {% endif %}
         </div>
     </nav>
@@ -28,5 +40,9 @@
     <script src="https://unpkg.com/feather-icons"></script>
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://unpkg.com/tippy.js@6"></script>
-    <script>tippy('[data-tippy-content]'); feather.replace()</script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        tippy('[data-tippy-content]')
+        feather.replace()
+    </script>
 </body>

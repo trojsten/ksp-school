@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import DetailView, ListView, TemplateView
 
 from school.courses.models import Course, CourseGroup, Lesson
+from school.problems.models import Submit
 
 
 class CoursesListView(ListView):
@@ -72,11 +73,18 @@ class LessonView(TemplateView):
             iter(filter(lambda x: x.order < self.item.order, reversed(items))), None
         )
 
+        submits = None
+        if self.item.problem and self.request.user.is_authenticated:
+            submits = Submit.objects.filter(
+                problem=self.item.problem, user=self.request.user
+            ).all()
+
         ctx.update(
             {
                 "lesson": self.lesson,
                 "item": self.item,
                 "items": items,
+                "submits": submits,
                 "previous_item": previous_item,
                 "next_item": next_item,
             }

@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     "school.users",
     "school.pages",
     "school.courses",
+    "school.problems",
 ]
 
 MIDDLEWARE = [

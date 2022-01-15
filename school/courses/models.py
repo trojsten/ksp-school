@@ -85,10 +85,14 @@ class LessonItem(models.Model):
     lesson_material = models.ForeignKey(
         LessonMaterial, on_delete=models.CASCADE, blank=True, null=True
     )
-    # problem = models.ForeignKey("...", on_delete=models.CASCADE, blank=True, null=True)
+    problem = models.ForeignKey(
+        "problems.Problem", on_delete=models.CASCADE, blank=True, null=True
+    )
 
     @property
     def name(self):
         if self.lesson_material:
             return self.lesson_material.name
+        if self.problem:
+            return self.problem.name
         return "???"

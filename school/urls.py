@@ -16,16 +16,17 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 from django.urls import include, path
 
-import school.courses.views as courses
 import school.pages.views as pages
 from school.users.views import login
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("auth/", include("social_django.urls", namespace="social")),
-    path("auth/login/", login),
+    path("auth/login/", login, name="login"),
+    path("auth/logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("", pages.HomepageView.as_view()),
     path("pages/<slug>/", pages.PageView.as_view()),
     path("", include("school.courses.urls")),

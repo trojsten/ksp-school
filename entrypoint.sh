@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo ">>> Generating code highlighting CSS"
+pygmentize -S monokai -f html -a .codehilite > /app/school/static/code.css
+
 echo ">>> Waiting for database"
 WAIT_start=$(date +%s)
 while :

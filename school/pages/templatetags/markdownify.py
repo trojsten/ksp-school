@@ -14,6 +14,8 @@ def markdownify(content):
                 "abbr",
                 "admonition",
                 "attr_list",
+                "fenced_code",
+                "codehilite",
                 "footnotes",
                 "md_in_html",
                 "sane_lists",

@@ -4,11 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}| KSP School{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'app.css' %}">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% block meta %}{% endblock %}
 </head>
-<body class="bg-gray-900 {% block body_class %}{% endblock %}">
+<body class="antialiased bg-gray-900 {% block body_class %}{% endblock %}">
     <nav class="bg-gray-700 border-b border-gray-500 py-4 text-gray-300 px-4 flex-none flex items-center">
         <a href="/">KSP School</a>
 

@@ -3,3 +3,7 @@
 @tailwind utilities;
 
 [x-cloak] { display: none; }
+
+.codehilite {
+    background: none !important;
+}

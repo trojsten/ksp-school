@@ -30,6 +30,7 @@ urlpatterns = [
     path("", pages.HomepageView.as_view()),
     path("pages/<slug>/", pages.PageView.as_view()),
     path("", include("school.courses.urls")),
+    path("", include("school.problems.urls")),
 ]
 
 if settings.DEBUG:

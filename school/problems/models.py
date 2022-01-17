@@ -22,6 +22,7 @@ class Submit(models.Model):
     class Meta:
         verbose_name = "submit"
         verbose_name_plural = "submity"
+        ordering = ("-created_at",)
 
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE, verbose_name="úloha")
     user = models.ForeignKey(
@@ -40,3 +41,6 @@ class Submit(models.Model):
     def protocol_object(self) -> Protocol:
         client = get_judge_client()
         return client.parse_protocol(self.protocol, 100)
+
+    def __str__(self):
+        return f"Submit {self.id}"

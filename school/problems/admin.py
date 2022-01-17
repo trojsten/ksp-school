@@ -10,4 +10,5 @@ class ProblemAdmin(admin.ModelAdmin):
 
 @admin.register(Submit)
 class SubmitAdmin(admin.ModelAdmin):
-    pass
+    list_display = ["problem", "user", "result", "created_at"]
+    search_fields = ["problem__name", "user__username"]

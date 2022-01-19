@@ -66,7 +66,8 @@ class SubmitCreateView(LoginRequiredMixin, FormView):
         try:
             submit.send_to_testovac()
         except JudgeConnectionError:
-            pass
+            submit.result = "CONNERR"
+            submit.save()
 
         url = reverse("submit_detail", args=[self.problem.testovac_id, submit.id])
         if "liid" in self.request.GET:

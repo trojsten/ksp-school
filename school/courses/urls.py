@@ -1,4 +1,4 @@
-from django.urls import include, path
+from django.urls import path
 
 from school.courses.views import CoursesListView, CourseView, LessonView
 

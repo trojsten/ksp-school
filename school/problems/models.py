@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from judge_client.client import Protocol
 
+from school.problems import constants
 from school.problems.services import get_judge_client
 
 
@@ -22,6 +23,7 @@ class Submit(models.Model):
     class Meta:
         verbose_name = "submit"
         verbose_name_plural = "submity"
+        ordering = ("-created_at",)
 
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE, verbose_name="úloha")
     user = models.ForeignKey(
@@ -40,3 +42,24 @@ class Submit(models.Model):
     def protocol_object(self) -> Protocol:
         client = get_judge_client()
         return client.parse_protocol(self.protocol, 100)
+
+    @property
+    def result_pretty(self):
+        return constants.TESTOVAC_MESSAGES[self.result]
+
+    @property
+    def result_color(self):
+        return constants.TESTOVAC_COLORS[self.result]
+
+    def send_to_testovac(self):
+        client = get_judge_client()
+        client.submit(
+            f"SCHOOL-{self.id}",
+            f"SCHOOL-{self.user_id}",
+            self.problem.testovac_id,
+            self.code,
+            self.language,
+        )
+
+    def __str__(self):
+        return f"Submit {self.id}"

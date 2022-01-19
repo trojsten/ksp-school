@@ -1,0 +1,20 @@
+{% load submits %}
+<div class="flex flex-col gap-2">
+    {% for submit in submits %}
+    <a href="{% url "submit_detail" submit.problem.testovac_id submit.id %}{% if lesson_item_id %}?liid={{ lesson_item_id }}{% endif %}" class="flex bg-gray-800 text-gray-300 px-4 py-3 rounded-md items-center">
+        <div>{{ submit.created_at }}</div>
+        <div class="ml-auto flex gap-3 items-center">
+            {# <span class="text-sm">24 ms</span> #}
+            {% if submit.result_color == "green" %}
+            <div class="bg-green-600 text-white font-bold px-2 py-1 text-sm rounded-md">{{ submit.result_pretty }}</div>
+            {% elif submit.result_color == "orange" %}
+            <div class="bg-orange-500 text-white font-bold px-2 py-1 text-sm rounded-md">{{ submit.result_pretty }}</div>
+            {% elif submit.result_color == "red" %}
+            <div class="bg-red-600 text-white font-bold px-2 py-1 text-sm rounded-md">{{ submit.result_pretty }}</div>
+            {% elif submit.result_color == "gray" %}
+            <div class="bg-gray-600 text-white font-bold px-2 py-1 text-sm rounded-md">{{ submit.result_pretty }}</div>
+            {% endif %}
+        </div>
+    </a>
+    {% endfor %}
+</div>

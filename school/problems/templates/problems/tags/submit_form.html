@@ -1,0 +1,7 @@
+<form action="{% url "submit_create" problem.testovac_id %}{% if lesson_item_id %}?liid={{ lesson_item_id }}{% endif %}" method="post" enctype="multipart/form-data" class="text-gray-300">
+    {% csrf_token %}
+    <div class="flex items-center gap-2">
+        <input type="file" name="file" class="block flex-grow bg-gray-800 p-2 rounded-md">
+        <button type="submit" class="btn">Otestovať</button>
+    </div>
+</form>

@@ -1,6 +1,8 @@
 from itertools import groupby
+from typing import List
 
 from django import template
+from django.urls import reverse
 from judge_client.client import ProtocolTest
 
 from school.problems.models import Submit
@@ -8,7 +10,7 @@ from school.problems.models import Submit
 register = template.Library()
 
 
-@register.inclusion_tag("problems/thermometers.html")
+@register.inclusion_tag("problems/tags/thermometers.html")
 def thermometers(submit: Submit):
     protocol = submit.protocol_object
 
@@ -34,3 +36,13 @@ def thermometers(submit: Submit):
         )
 
     return {"submit": submit, "protocol": protocol, "batches": batches}
+
+
+@register.inclusion_tag("problems/tags/submit_list.html")
+def submit_list(submits: List[Submit], lesson_item_id=None):
+    return {"submits": submits, "lesson_item_id": lesson_item_id}
+
+
+@register.inclusion_tag("problems/tags/submit_form.html")
+def submit_form(problem, lesson_item_id=None):
+    return {"problem": problem, "lesson_item_id": lesson_item_id}

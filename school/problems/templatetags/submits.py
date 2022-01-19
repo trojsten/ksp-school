@@ -41,3 +41,8 @@ def thermometers(submit: Submit):
 @register.inclusion_tag("problems/submit_list.html")
 def submit_list(submits: List[Submit], lesson_item_id=None):
     return {"submits": submits, "lesson_item_id": lesson_item_id}
+
+
+@register.inclusion_tag("problems/tags/submit_form.html")
+def submit_form(problem, lesson_item_id=None):
+    return {"problem": problem, "lesson_item_id": lesson_item_id}

@@ -10,7 +10,7 @@ from school.problems.models import Submit
 register = template.Library()
 
 
-@register.inclusion_tag("problems/thermometers.html")
+@register.inclusion_tag("problems/tags/thermometers.html")
 def thermometers(submit: Submit):
     protocol = submit.protocol_object
 
@@ -38,7 +38,7 @@ def thermometers(submit: Submit):
     return {"submit": submit, "protocol": protocol, "batches": batches}
 
 
-@register.inclusion_tag("problems/submit_list.html")
+@register.inclusion_tag("problems/tags/submit_list.html")
 def submit_list(submits: List[Submit], lesson_item_id=None):
     return {"submits": submits, "lesson_item_id": lesson_item_id}
 

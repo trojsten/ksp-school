@@ -77,8 +77,10 @@ class LessonView(TemplateView):
         submits = None
         if self.item.problem and self.request.user.is_authenticated:
             submits = Submit.objects.filter(
-                problem=self.item.problem, user=self.request.user
-            ).all()
+                problem=self.item.problem,
+                user=self.request.user,
+                lesson_item=self.item,
+            )
 
         ctx.update(
             {

@@ -38,6 +38,14 @@ class Submit(models.Model):
     protocol = models.TextField(blank=True, verbose_name="protokol")
     result = models.CharField(blank=True, max_length=16, verbose_name="verdikt")
 
+    lesson_item = models.ForeignKey(
+        "courses.LessonItem",
+        blank=True,
+        null=True,
+        verbose_name="časť lekcie",
+        on_delete=models.SET_NULL,
+    )
+
     @property
     def protocol_object(self) -> Protocol:
         client = get_judge_client()

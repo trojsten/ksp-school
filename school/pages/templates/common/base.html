@@ -16,7 +16,10 @@
 </head>
 <body class="antialiased bg-gray-900 {% block body_class %}{% endblock %}">
     <nav class="bg-gray-700 border-b border-gray-500 py-4 text-gray-300 px-4 flex-none flex items-center">
-        <a href="/">KSP School</a>
+        <a href="/" class="flex items-center gap-2 font-bold text-white hover:text-gray-300">
+            <img src="{% static 'logo.svg' %}" alt="Logo KSP School" class="h-8">
+            KSP School
+        </a>
 
         <div class="ml-auto text-sm">
             {% if user.is_authenticated %}

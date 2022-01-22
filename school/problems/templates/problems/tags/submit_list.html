@@ -1,7 +1,7 @@
 {% load submits %}
 <div class="flex flex-col gap-2">
     {% for submit in submits %}
-    <a href="{% url "submit_detail" submit.problem.testovac_id submit.id %}{% if lesson_item_id %}?liid={{ lesson_item_id }}{% endif %}" class="flex gap-2 flex-col lg:flex-row bg-gray-800 text-gray-300 px-4 py-3 rounded-md lg:items-center">
+    <a href="{% url "submit_detail" submit.problem.testovac_id submit.id %}{% if lesson_item_id %}?liid={{ lesson_item_id }}{% endif %}" class="flex gap-2 flex-col lg:flex-row bg-gray-800 hover:bg-gray-700 text-gray-300 px-4 py-3 rounded-md lg:items-center">
         <div>{{ submit.created_at }}</div>
         {% if not lesson_item_id and submit.lesson_item %}
         <div class="text-sm text-gray-500">(z kurzu {{ submit.lesson_item.lesson.course.name }})</div>

@@ -23,6 +23,7 @@ class CourseGroup(models.Model):
     class Meta:
         verbose_name = "skupina kurzov"
         verbose_name_plural = "skupiny kurzov"
+        ordering = ["order"]
 
     name = models.CharField(max_length=64)
     order = models.IntegerField()
@@ -39,6 +40,7 @@ class Lesson(models.Model):
         constraints = [
             UniqueConstraint(fields=["course", "slug"], name="unique_course_slug"),
         ]
+        ordering = ["layer", "order"]
 
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     name = models.CharField(max_length=64)
@@ -77,6 +79,7 @@ class LessonItem(models.Model):
             UniqueConstraint(fields=["lesson", "order"], name="unique_lesson_order"),
             UniqueConstraint(fields=["lesson", "slug"], name="unique_lesson_slug"),
         ]
+        ordering = ["order"]
 
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     order = models.IntegerField()

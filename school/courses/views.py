@@ -7,6 +7,7 @@ from django.views.generic import DetailView, ListView, TemplateView
 from school.courses import trackers
 from school.courses.models import Course, CourseGroup, Lesson
 from school.courses.trackers.items import get_items_progress
+from school.courses.trackers.lessons import get_lessons_with_progress
 from school.problems.models import Submit
 
 
@@ -29,11 +30,12 @@ class CourseView(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
 
-        lessons = (
-            Lesson.objects.filter(course=self.object).order_by("layer", "order").all()
+        lessons = get_lessons_with_progress(
+            Lesson.objects.filter(course=self.object).all(),
+            self.request.user,
         )
         layers = []
-        for _, layer_lessons in groupby(lessons, key=lambda x: x.layer):
+        for _, layer_lessons in groupby(lessons, key=lambda x: x.lesson.layer):
             layers.append(list(layer_lessons))
 
         ctx["layers"] = layers

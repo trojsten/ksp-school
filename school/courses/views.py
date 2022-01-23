@@ -5,6 +5,7 @@ from django.http import Http404, HttpResponseNotFound
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import DetailView, ListView, TemplateView
 
+from school.courses import trackers
 from school.courses.models import Course, CourseGroup, Lesson
 from school.problems.models import Submit
 
@@ -82,6 +83,12 @@ class LessonView(TemplateView):
                 lesson_item=self.item,
             )
 
+        # Tracking
+        if self.request.user.is_authenticated:
+            if self.item.problem:
+                trackers.mark_started(self.item, self.request.user)
+            else:
+                trackers.mark_completed(self.item, self.request.user)
         ctx.update(
             {
                 "lesson": self.lesson,

@@ -1,4 +1,4 @@
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models import UniqueConstraint
@@ -99,3 +99,15 @@ class LessonItem(models.Model):
         if self.problem:
             return self.problem.name
         return "???"
+
+
+class Tracker(models.Model):
+    class Meta:
+        constraints = [
+            UniqueConstraint(fields=["lesson_item", "user"], name="unique_item_user"),
+        ]
+
+    lesson_item = models.ForeignKey("courses.LessonItem", on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    started_at = models.DateTimeField(auto_now_add=True)
+    completed_at = models.DateTimeField(blank=True, null=True)

@@ -2,13 +2,14 @@ from dataclasses import dataclass
 from typing import List
 
 from school.courses.models import LessonItem, Tracker
+from school.courses.trackers import TrackerStatus
 from school.users.models import User
 
 
 @dataclass
 class LessonItemWithProgress:
     item: LessonItem
-    completed: bool
+    status: TrackerStatus
 
 
 @dataclass
@@ -21,7 +22,9 @@ class LessonItemProgress:
 def get_items_progress(items: List[LessonItem], user: User) -> LessonItemProgress:
     if not user.is_authenticated:
         return LessonItemProgress(
-            [LessonItemWithProgress(i, False) for i in items], 0, len(items)
+            [LessonItemWithProgress(i, TrackerStatus.NONE) for i in items],
+            0,
+            len(items),
         )
 
     progress_items = []
@@ -30,6 +33,10 @@ def get_items_progress(items: List[LessonItem], user: User) -> LessonItemProgres
     ).values_list("lesson_item_id", flat=True)
 
     for item in items:
-        progress_items.append(LessonItemWithProgress(item, item.id in completed_items))
+        status = TrackerStatus.NONE
+        if item.id in completed_items:
+            status = TrackerStatus.COMPLETE
+
+        progress_items.append(LessonItemWithProgress(item, status))
 
     return LessonItemProgress(progress_items, len(completed_items), len(items))

@@ -1,3 +1,5 @@
+import enum
+
 from django.utils import timezone
 
 from school.courses.models import LessonItem, Tracker
@@ -14,3 +16,10 @@ def mark_completed(item: LessonItem, user: User):
     if not obj.completed_at:
         obj.completed_at = timezone.now()
         obj.save()
+
+
+class TrackerStatus(enum.Enum):
+    NONE = 0
+    STARTED = 1
+    COMPLETE = 2
+    FASTFORWARD = 3

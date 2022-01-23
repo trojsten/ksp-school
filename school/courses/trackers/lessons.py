@@ -1,18 +1,11 @@
-import enum
 from dataclasses import dataclass
 from typing import List
 
 from django.db.models import Count
 
 from school.courses.models import Lesson, LessonItem, Tracker
+from school.courses.trackers import TrackerStatus
 from school.users.models import User
-
-
-class LessonStatus(enum.Enum):
-    NONE = 0
-    STARTED = 1
-    COMPLETE = 2
-    FASTFORWARD = 3
 
 
 @dataclass
@@ -20,14 +13,14 @@ class LessonWithProgress:
     lesson: Lesson
     completed: int
     total: int
-    status: LessonStatus
+    status: TrackerStatus
 
 
 def get_lessons_with_progress(
     lessons: List[Lesson], user: User
 ) -> List[LessonWithProgress]:
     if not user.is_authenticated:
-        return [LessonWithProgress(l, 0, 0, LessonStatus.NONE) for l in lessons]
+        return [LessonWithProgress(l, 0, 0, TrackerStatus.NONE) for l in lessons]
 
     out = []
     lesson_items = {
@@ -48,15 +41,12 @@ def get_lessons_with_progress(
     for lesson in lessons:
         completed = completed_items[lesson.id] if lesson.id in completed_items else 0
         total = lesson_items[lesson.id] if lesson.id in lesson_items else 0
-        status = LessonStatus.NONE
+        status = TrackerStatus.NONE
         if completed != 0:
-            status = LessonStatus.STARTED
+            status = TrackerStatus.STARTED
 
         if completed == total:
-            status = LessonStatus.COMPLETE
-
-            if lesson.slug == "ff":
-                status = LessonStatus.FASTFORWARD
+            status = TrackerStatus.COMPLETE
 
         out.append(LessonWithProgress(lesson, completed, total, status))
 

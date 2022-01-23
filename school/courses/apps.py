@@ -4,3 +4,7 @@ from django.apps import AppConfig
 class CoursesConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "school.courses"
+
+    def ready(self):
+        # See https://docs.djangoproject.com/en/4.0/topics/signals/#connecting-receiver-functions
+        from . import signals  # noqa

@@ -21,16 +21,24 @@
                 </div>
             </div>
 
+            {% if user.is_authenticated %}
             <div class="rounded-md bg-gray-700 w-full h-2 mt-2 lg:mt-4">
-                <div class="rounded-md bg-blue-600 h-2" style="width: 33%"></div>
+                <div class="rounded-md {% if progress.completed == progress.total %}bg-green-500{% else %}bg-blue-600{% endif %} h-2" style="width: {% widthratio progress.completed progress.total 100 %}%"></div>
             </div>
+            {% endif %}
 
             <hr class="my-4 lg:my-6 border-gray-600">
 
             <nav class="flex">
-                <ul class="flex flex-col gap-1 lg:gap-2 lg:text-base text-sm">
-                    {% for lesson_item in lesson.items.all %}
-                    <li><a href="{% url 'lesson' lesson.course.slug lesson.slug lesson_item.slug %}" class="flex gap-1.5 items-center {% if item == lesson_item %}text-white font-bold{% endif %}">{{ lesson_item.name }}</a></li>
+                <ul class="flex flex-col gap-1 lg:gap-2 lg:text-base text-sm w-full">
+                    {% for progress_item in items %}
+                    <li>
+                        <a href="{% url 'lesson' lesson.course.slug lesson.slug progress_item.item.slug %}" class="flex gap-1.5 items-center {% if item == progress_item.item %}text-white font-bold{% endif %}">
+                            <i data-feather="{% if progress_item.item.problem %}code{% else %}file-text{% endif %}" class="w-4 h-4"></i>
+                            {{ progress_item.item.name }}
+                            {% if progress_item.completed %}<i data-feather="check" class="ml-auto w-4 h-4 text-green-500"></i>{% endif %}
+                        </a>
+                    </li>
                     {% endfor %}
                 </ul>
             </nav>

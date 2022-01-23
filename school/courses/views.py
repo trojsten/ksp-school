@@ -1,12 +1,12 @@
 from itertools import groupby
 
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import Http404, HttpResponseNotFound
-from django.shortcuts import get_object_or_404, redirect, render
+from django.http import Http404
+from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import DetailView, ListView, TemplateView
 
 from school.courses import trackers
 from school.courses.models import Course, CourseGroup, Lesson
+from school.courses.trackers.items import get_items_progress
 from school.problems.models import Submit
 
 
@@ -53,7 +53,7 @@ class LessonView(TemplateView):
         if "item" in kwargs:
             self.item = get_object_or_404(self.lesson.items(), slug=kwargs["item"])
         else:
-            first_item = self.lesson.lessonitem_set.order_by("order").first()
+            first_item = self.lesson.lessonitem_set.first()
             if not first_item:
                 raise Http404()
 
@@ -89,11 +89,14 @@ class LessonView(TemplateView):
                 trackers.mark_started(self.item, self.request.user)
             else:
                 trackers.mark_completed(self.item, self.request.user)
+
+        progress = get_items_progress(items, self.request.user)
         ctx.update(
             {
                 "lesson": self.lesson,
                 "item": self.item,
-                "items": items,
+                "items": progress.items,
+                "progress": progress,
                 "submits": submits,
                 "previous_item": previous_item,
                 "next_item": next_item,

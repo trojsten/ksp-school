@@ -29,7 +29,7 @@ def get_items_progress(items: List[LessonItem], user: User) -> LessonItemProgres
 
     progress_items = []
     completed_items = Tracker.objects.filter(
-        user=user, lesson_item__in=items, completed_at__isnull=False
+        user=user, lesson_item_id__in=[i.id for i in items], completed_at__isnull=False
     ).values_list("lesson_item_id", flat=True)
 
     for item in items:

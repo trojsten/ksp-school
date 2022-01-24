@@ -23,16 +23,17 @@ def get_lessons_with_progress(
         return [LessonWithProgress(l, 0, 0, TrackerStatus.NONE) for l in lessons]
 
     out = []
+    lesson_ids = [l.id for l in lessons]
     lesson_items = {
         x["lesson_id"]: x["id__count"]
-        for x in LessonItem.objects.filter(lesson__in=lessons)
+        for x in LessonItem.objects.filter(lesson_id__in=lesson_ids)
         .values("lesson_id")
         .annotate(Count("id"))
     }
     completed_items = {
         x["lesson_item__lesson_id"]: x["id__count"]
         for x in Tracker.objects.filter(
-            user=user, lesson_item__lesson__in=lessons, completed_at__isnull=False
+            user=user, lesson_item__lesson_id__in=lesson_ids, completed_at__isnull=False
         )
         .values("lesson_item__lesson_id")
         .annotate(Count("id"))

@@ -43,12 +43,14 @@ mark_started = get_or_create_trackers
 
 
 @transaction.atomic
-def mark_completed(item: LessonItem, user: User):
+def mark_completed(
+    item: LessonItem, user: User
+) -> tuple[LessonItemTracker, LessonTracker, CourseTracker]:
     item_tracker, lesson_tracker, course_tracker = get_or_create_trackers(item, user)
 
     # We only update the tracker if it was not completed before,
     if item_tracker.completed_at is not None:
-        return
+        return item_tracker, lesson_tracker, course_tracker
 
     item_tracker.completed_at = timezone.now()
     item_tracker.save()
@@ -60,7 +62,7 @@ def mark_completed(item: LessonItem, user: User):
     # LessonTracker state did not change.
     if old_state == new_state:
         lesson_tracker.save()
-        return
+        return item_tracker, lesson_tracker, course_tracker
 
     # We have completed the Lesson (FF -> COMPLETE or STARTED -> COMPLETE)
     if new_state == TrackerState.COMPLETE:
@@ -76,6 +78,7 @@ def mark_completed(item: LessonItem, user: User):
         course_tracker.save()
 
     lesson_tracker.save()
+    return item_tracker, lesson_tracker, course_tracker
 
 
 def recalculate_lesson(lesson: Lesson):

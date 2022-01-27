@@ -56,7 +56,9 @@ class Lesson(models.Model):
         Builds QuerySet for retrieving all lesson items with related data
         :return: QuerySet
         """
-        return self.lessonitem_set.order_by("order").select_related("lesson_material")
+        return self.lessonitem_set.order_by("order").select_related(
+            "lesson_material", "problem"
+        )
 
 
 class LessonMaterial(models.Model):

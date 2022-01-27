@@ -56,7 +56,7 @@ class LessonView(TemplateView):
 
         if "item" in kwargs:
             self.item: LessonItem = get_object_or_404(
-                self.lesson.items(), slug=kwargs["item"]
+                self.lesson.lessonitem_set, slug=kwargs["item"]
             )
         else:
             first_item = self.lesson.lessonitem_set.order_by("order").first()
@@ -93,12 +93,9 @@ class LessonView(TemplateView):
         tracker = None
         if self.request.user.is_authenticated:
             if self.item.lesson_material:
-                mark_completed(self.item, self.request.user)
+                _, tracker, _ = mark_completed(self.item, self.request.user)
             else:
-                get_or_create_trackers(self.item, self.request.user)
-            tracker = LessonTracker.objects.get(
-                lesson=self.lesson, user=self.request.user
-            )
+                _, tracker, _ = get_or_create_trackers(self.item, self.request.user)
 
         ctx.update(
             {

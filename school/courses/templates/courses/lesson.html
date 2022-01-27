@@ -32,7 +32,7 @@
 
             <nav class="flex">
                 <ul class="flex flex-col gap-1 lg:gap-2 lg:text-base text-sm">
-                    {% for lesson_item in lesson.items.all %}
+                    {% for lesson_item in items %}
                     <li><a href="{% url 'lesson' lesson.course.slug lesson.slug lesson_item.slug %}" class="flex gap-1.5 items-center {% if item == lesson_item %}text-white font-bold{% endif %}">{{ lesson_item.name }}</a></li>
                     {% endfor %}
                 </ul>

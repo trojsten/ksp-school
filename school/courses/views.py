@@ -5,8 +5,9 @@ from django.http import Http404, HttpResponseNotFound
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import DetailView, ListView, TemplateView
 
-from school.courses.models import Course, CourseGroup, Lesson
+from school.courses.models import Course, CourseGroup, Lesson, LessonItem
 from school.problems.models import Submit
+from school.trackers.utils import get_or_create_trackers, mark_completed
 
 
 class CoursesListView(ListView):
@@ -50,7 +51,9 @@ class LessonView(TemplateView):
         )
 
         if "item" in kwargs:
-            self.item = get_object_or_404(self.lesson.items(), slug=kwargs["item"])
+            self.item: LessonItem = get_object_or_404(
+                self.lesson.items(), slug=kwargs["item"]
+            )
         else:
             first_item = self.lesson.lessonitem_set.order_by("order").first()
             if not first_item:
@@ -81,6 +84,13 @@ class LessonView(TemplateView):
                 user=self.request.user,
                 lesson_item=self.item,
             )
+
+        # Tracking:
+        if self.request.user.is_authenticated:
+            if self.item.lesson_material:
+                mark_completed(self.item, self.request.user)
+            else:
+                get_or_create_trackers(self.item, self.request.user)
 
         ctx.update(
             {

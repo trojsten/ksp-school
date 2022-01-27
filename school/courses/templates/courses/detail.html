@@ -22,10 +22,25 @@
         <div class="flex flex-col md:flex-row text-white items-center overflow-x-auto gap-4">
             {% for layer in layers %}
                 <div class="gap-2 flex flex-col">
-                    {% for lesson in layer %}
-                    <a href="{% url 'lesson' course.slug lesson.slug %}" class="px-3 py-2 border border-gray-600 bg-gray-800 rounded-md flex items-center gap-2">
-                        {{ lesson.name }}
-                        <i class="w-4 h-4 ml-auto text-gray-500" data-feather="x"></i>
+                    {% for lt in layer %}
+                    <a href="{% url 'lesson' course.slug lt.lesson.slug %}" class="px-3 py-2 border rounded-md flex items-center gap-2 {% if not lt.tracker %}border-gray-700 bg-gray-800{% elif lt.tracker.state == lt.tracker.state.STARTED %}border-blue-600 bg-blue-800{% elif lt.tracker.state == lt.tracker.state.COMPLETE %}border-green-600 bg-green-800{% elif lt.tracker.state == lt.tracker.state.FASTFORWARD %}border-cyan-600 bg-cyan-800{% endif %}">
+{#                            <div data-tippy-content="Checkpoint">#}
+{#                                <i class="w-4 h-4" data-feather="flag"></i>#}
+{#                            </div>#}
+
+                        {{ lt.lesson.name }}
+
+                        {% if lt.tracker %}
+                            {% if lt.tracker.state == lt.tracker.state.STARTED %}
+                            <span class="text-xs ml-auto text-blue-300">{{ lt.tracker.completed }}/{{ lt.tracker.total }}</span>
+                            {% elif lt.tracker.state == lt.tracker.state.COMPLETE %}
+                            <i class="w-4 h-4 ml-auto text-green-400" data-feather="check"></i>
+                            {% elif lt.tracker.state == lt.tracker.state.FASTFORWARD %}
+                            <div data-tippy-content="Túto lekciu si preskočil/-a" class="ml-auto">
+                                <i class="w-4 h-4 text-cyan-500" data-feather="fast-forward"></i>
+                            </div>
+                            {% endif %}
+                        {% endif %}
                     </a>
                     {% endfor %}
                 </div>

@@ -7,6 +7,7 @@ from django.views.generic import DetailView, ListView, TemplateView
 
 from school.courses.models import Course, CourseGroup, Lesson, LessonItem
 from school.problems.models import Submit
+from school.trackers.helpers import get_lessons_with_trackers
 from school.trackers.models import LessonTracker
 from school.trackers.utils import get_or_create_trackers, mark_completed
 
@@ -30,11 +31,13 @@ class CourseView(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
 
-        lessons = (
-            Lesson.objects.filter(course=self.object).order_by("layer", "order").all()
+        lessons = get_lessons_with_trackers(
+            Lesson.objects.filter(course=self.object).order_by("layer", "order").all(),
+            self.request.user,
         )
+
         layers = []
-        for _, layer_lessons in groupby(lessons, key=lambda x: x.layer):
+        for _, layer_lessons in groupby(lessons, key=lambda x: x.lesson.layer):
             layers.append(list(layer_lessons))
 
         ctx["layers"] = layers

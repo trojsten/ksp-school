@@ -29,7 +29,9 @@ class Tracker(models.Model):
 class LessonItemTracker(Tracker):
     class Meta:
         constraints = [
-            UniqueConstraint(["lesson_item", "user"], name="tracker_item_user_unique")
+            UniqueConstraint(
+                fields=["lesson_item", "user"], name="tracker_item_user_unique"
+            )
         ]
 
     lesson_item = models.ForeignKey(
@@ -47,7 +49,9 @@ class LessonItemTracker(Tracker):
 class LessonTracker(Tracker):
     class Meta:
         constraints = [
-            UniqueConstraint(["lesson", "user"], name="tracker_lesson_user_unique")
+            UniqueConstraint(
+                fields=["lesson", "user"], name="tracker_lesson_user_unique"
+            )
         ]
 
     lesson = models.ForeignKey(
@@ -71,7 +75,9 @@ class LessonTracker(Tracker):
 class CourseTracker(Tracker):
     class Meta:
         constraints = [
-            UniqueConstraint(["course", "user"], name="tracker_course_user_unique")
+            UniqueConstraint(
+                fields=["course", "user"], name="tracker_course_user_unique"
+            )
         ]
 
     course = models.ForeignKey(

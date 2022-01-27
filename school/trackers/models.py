@@ -43,7 +43,7 @@ class LessonItemTracker(Tracker):
         if self.completed_at is not None:
             return TrackerState.COMPLETE
 
-        return TrackerState.COMPLETE
+        return TrackerState.STARTED
 
 
 class LessonTracker(Tracker):

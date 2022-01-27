@@ -7,7 +7,7 @@ from django.views.generic import DetailView, ListView, TemplateView
 
 from school.courses.models import Course, CourseGroup, Lesson, LessonItem
 from school.problems.models import Submit
-from school.trackers.helpers import get_lessons_with_trackers
+from school.trackers.helpers import get_items_with_trackers, get_lessons_with_trackers
 from school.trackers.models import LessonTracker
 from school.trackers.utils import get_or_create_trackers, mark_completed
 
@@ -102,7 +102,7 @@ class LessonView(TemplateView):
                 "lesson": self.lesson,
                 "tracker": tracker,
                 "item": self.item,
-                "items": items,
+                "items": get_items_with_trackers(items, self.request.user),
                 "submits": submits,
                 "previous_item": previous_item,
                 "next_item": next_item,

@@ -31,9 +31,17 @@
             <hr class="my-4 lg:my-6 border-gray-600">
 
             <nav class="flex">
-                <ul class="flex flex-col gap-1 lg:gap-2 lg:text-base text-sm">
-                    {% for lesson_item in items %}
-                    <li><a href="{% url 'lesson' lesson.course.slug lesson.slug lesson_item.slug %}" class="flex gap-1.5 items-center {% if item == lesson_item %}text-white font-bold{% endif %}">{{ lesson_item.name }}</a></li>
+                <ul class="flex flex-col gap-1 lg:gap-2 lg:text-base text-sm w-full">
+                    {% for it in items %}
+                    <li>
+                        <a href="{% url 'lesson' lesson.course.slug lesson.slug it.item.slug %}" class="flex gap-1.5 items-center {% if item == it.item %}text-white font-bold{% endif %}">
+                            {{ it.item.name }}
+
+                            {% if it.tracker and it.tracker.state == it.tracker.state.COMPLETE %}
+                                <i data-feather="check" class="ml-auto w-4 h-4 text-green-500"></i>
+                            {% endif %}
+                        </a>
+                    </li>
                     {% endfor %}
                 </ul>
             </nav>

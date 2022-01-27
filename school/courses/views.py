@@ -7,6 +7,7 @@ from django.views.generic import DetailView, ListView, TemplateView
 
 from school.courses.models import Course, CourseGroup, Lesson, LessonItem
 from school.problems.models import Submit
+from school.trackers.models import LessonTracker
 from school.trackers.utils import get_or_create_trackers, mark_completed
 
 
@@ -86,15 +87,20 @@ class LessonView(TemplateView):
             )
 
         # Tracking:
+        tracker = None
         if self.request.user.is_authenticated:
             if self.item.lesson_material:
                 mark_completed(self.item, self.request.user)
             else:
                 get_or_create_trackers(self.item, self.request.user)
+            tracker = LessonTracker.objects.get(
+                lesson=self.lesson, user=self.request.user
+            )
 
         ctx.update(
             {
                 "lesson": self.lesson,
+                "tracker": tracker,
                 "item": self.item,
                 "items": items,
                 "submits": submits,

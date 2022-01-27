@@ -59,6 +59,7 @@ def mark_completed(item: LessonItem, user: User):
 
     # LessonTracker state did not change.
     if old_state == new_state:
+        lesson_tracker.save()
         return
 
     # We have completed the Lesson (FF -> COMPLETE or STARTED -> COMPLETE)

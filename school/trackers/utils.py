@@ -39,9 +39,6 @@ def get_or_create_trackers(
     return item_tracker, lesson_tracker, course_tracker
 
 
-mark_started = get_or_create_trackers
-
-
 @transaction.atomic
 def mark_completed(
     item: LessonItem, user: User

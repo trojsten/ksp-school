@@ -67,6 +67,7 @@ class LessonMaterial(models.Model):
         verbose_name_plural = "učebné texty"
 
     name = models.CharField(max_length=64)
+    material_id = models.SlugField(unique=True)
     content = models.TextField(blank=True)
 
     def __str__(self):

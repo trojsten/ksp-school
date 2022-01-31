@@ -1,4 +1,5 @@
 {% extends 'common/base.html' %}
+{% load percent %}
 {% load submits %}
 {% load markdownify %}
 
@@ -21,16 +22,28 @@
                 </div>
             </div>
 
-            <div class="rounded-md bg-gray-700 w-full h-2 mt-2 lg:mt-4">
-                <div class="rounded-md bg-blue-600 h-2" style="width: 33%"></div>
-            </div>
+            {% if user.is_authenticated %}
+                <div class="rounded-md bg-gray-700 w-full h-2 mt-2 lg:mt-4">
+                    <div class="rounded-md {% if tracker.state == tracker.state.COMPLETE %}bg-green-500{% else %}bg-blue-600{% endif %} h-2" style="width: {% percent tracker.completed tracker.total %}%"></div>
+                </div>
+            {% endif %}
 
             <hr class="my-4 lg:my-6 border-gray-600">
 
             <nav class="flex">
-                <ul class="flex flex-col gap-1 lg:gap-2 lg:text-base text-sm">
-                    {% for lesson_item in lesson.items.all %}
-                    <li><a href="{% url 'lesson' lesson.course.slug lesson.slug lesson_item.slug %}" class="flex gap-1.5 items-center {% if item == lesson_item %}text-white font-bold{% endif %}">{{ lesson_item.name }}</a></li>
+                <ul class="flex flex-col gap-1 lg:gap-2 lg:text-base text-sm w-full">
+                    {% for it in items %}
+                    <li>
+                        <a href="{% url 'lesson' lesson.course.slug lesson.slug it.item.slug %}" class="flex gap-1.5 items-center {% if item == it.item %}text-white font-bold{% endif %}">
+                            <i data-feather="{% if it.item.problem %}code{% else %}file-text{% endif %}" class="w-4 h-4"></i>
+
+                            {{ it.item.name }}
+
+                            {% if it.tracker and it.tracker.state == it.tracker.state.COMPLETE %}
+                                <i data-feather="check" class="ml-auto w-4 h-4 text-green-500"></i>
+                            {% endif %}
+                        </a>
+                    </li>
                     {% endfor %}
                 </ul>
             </nav>

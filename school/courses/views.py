@@ -5,8 +5,15 @@ from django.http import Http404, HttpResponseNotFound
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import DetailView, ListView, TemplateView
 
-from school.courses.models import Course, CourseGroup, Lesson
+from school.courses.models import Course, CourseGroup, Lesson, LessonItem
 from school.problems.models import Submit
+from school.trackers.helpers import (
+    get_course_groups_with_trackers,
+    get_items_with_trackers,
+    get_lessons_with_trackers,
+)
+from school.trackers.models import LessonTracker
+from school.trackers.utils import get_or_create_trackers, mark_completed
 
 
 class CoursesListView(ListView):
@@ -20,6 +27,13 @@ class CoursesListView(ListView):
             .all()
         )
 
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["groups"] = get_course_groups_with_trackers(
+            self.object_list, self.request.user
+        )
+        return ctx
+
 
 class CourseView(DetailView):
     template_name = "courses/detail.html"
@@ -28,11 +42,13 @@ class CourseView(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
 
-        lessons = (
-            Lesson.objects.filter(course=self.object).order_by("layer", "order").all()
+        lessons = get_lessons_with_trackers(
+            Lesson.objects.filter(course=self.object).order_by("layer", "order").all(),
+            self.request.user,
         )
+
         layers = []
-        for _, layer_lessons in groupby(lessons, key=lambda x: x.layer):
+        for _, layer_lessons in groupby(lessons, key=lambda x: x.lesson.layer):
             layers.append(list(layer_lessons))
 
         ctx["layers"] = layers
@@ -50,7 +66,9 @@ class LessonView(TemplateView):
         )
 
         if "item" in kwargs:
-            self.item = get_object_or_404(self.lesson.items(), slug=kwargs["item"])
+            self.item: LessonItem = get_object_or_404(
+                self.lesson.lessonitem_set, slug=kwargs["item"]
+            )
         else:
             first_item = self.lesson.lessonitem_set.order_by("order").first()
             if not first_item:
@@ -82,11 +100,20 @@ class LessonView(TemplateView):
                 lesson_item=self.item,
             )
 
+        # Tracking:
+        tracker = None
+        if self.request.user.is_authenticated:
+            if self.item.lesson_material:
+                _, tracker, _ = mark_completed(self.item, self.request.user)
+            else:
+                _, tracker, _ = get_or_create_trackers(self.item, self.request.user)
+
         ctx.update(
             {
                 "lesson": self.lesson,
+                "tracker": tracker,
                 "item": self.item,
-                "items": items,
+                "items": get_items_with_trackers(items, self.request.user),
                 "submits": submits,
                 "previous_item": previous_item,
                 "next_item": next_item,

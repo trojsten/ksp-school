@@ -1,4 +1,5 @@
 {% extends 'common/base.html' %}
+{% load percent %}
 
 {% block title %}Zoznam kurzov {{ block.super }}{% endblock %}
 
@@ -14,26 +15,28 @@
 
 
 
-    {% for object in object_list %}
+    {% for t in groups %}
     <div class="container mx-auto px-6 py-6">
-        <h1 class="tracking-tight text-xl text-white font-bold lg:text-3xl mb-6">{{ object.name }}</h1>
+        <h1 class="tracking-tight text-xl text-white font-bold lg:text-3xl mb-6">{{ t.group.name }}</h1>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1">
-        {% for course in object.courses.all %}
-            <a href="{% url 'course_detail' course.slug %}" class="text-gray-400 p-6 flex flex-col text-center hover:bg-gray-800 cursor-pointer lg:items-center gap-4 rounded-md">
-                {% if course.image %}
-                <img src="{{ course.image.url }}" class="w-20 h-20 border border-gray-600 rounded-md shadow-inner">
+        {% for ct in t.courses %}
+            <a href="{% url 'course_detail' ct.course.slug %}" class="text-gray-400 p-6 flex flex-col text-center hover:bg-gray-800 cursor-pointer lg:items-center gap-4 rounded-md">
+                {% if ct.course.image %}
+                <img src="{{ ct.course.image.url }}" class="w-20 h-20 border border-gray-600 rounded-md shadow-inner">
                 {% endif %}
 
                 <div class="w-full">
-                    <h2 class="text-white font-bold text-xl lg:text-2xl">{{ course.name }}</h2>
+                    <h2 class="text-white font-bold text-xl lg:text-2xl">{{ ct.course.name }}</h2>
                     <p class="mt-2">
-                        {{ course.short_description }}
+                        {{ ct.course.short_description }}
                     </p>
 
+                    {% if ct.tracker %}
                     <div class="rounded-md bg-gray-700 w-full h-2 mt-4">
-                        <div class="rounded-md bg-blue-600 h-2" style="width: 33%"></div>
+                        <div class="rounded-md {% if ct.tracker.state == ct.tracker.state.COMPLETE %}bg-green-500{% else %}bg-blue-600{% endif %} h-2" style="width: {% percent ct.tracker.completed ct.tracker.total %}%"></div>
                     </div>
+                    {% endif %}
                 </div>
             </a>
         {% endfor %}

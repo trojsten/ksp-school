@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
-from school.courses.models import Lesson, LessonItem
-from school.trackers.models import LessonItemTracker, LessonTracker
+from school.courses.models import Course, CourseGroup, Lesson, LessonItem
+from school.trackers.models import CourseTracker, LessonItemTracker, LessonTracker
 from school.users.models import User
 
 
@@ -48,3 +48,40 @@ def get_items_with_trackers(
     }
 
     return [LessonItemWithTracker(i, trackers.get(i.id)) for i in items]
+
+
+@dataclass
+class CourseWithTracker:
+    course: Course
+    tracker: Optional[CourseTracker]
+
+
+def get_courses_with_trackers(
+    courses: List[Course], user: User
+) -> List[CourseWithTracker]:
+    if not user.is_authenticated:
+        return [CourseWithTracker(i, None) for i in courses]
+
+    trackers = {
+        t.course_id: t
+        for t in CourseTracker.objects.filter(
+            user=user, course_id__in=[x.id for x in courses]
+        )
+    }
+
+    return [CourseWithTracker(i, trackers.get(i.id)) for i in courses]
+
+
+@dataclass
+class CourseGroupWithTracker:
+    group: CourseGroup
+    courses: List[CourseWithTracker]
+
+
+def get_course_groups_with_trackers(
+    groups: List[CourseGroup], user: User
+) -> List[CourseGroupWithTracker]:
+    return [
+        CourseGroupWithTracker(i, get_courses_with_trackers(i.courses.all(), user))
+        for i in groups
+    ]

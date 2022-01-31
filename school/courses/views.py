@@ -7,7 +7,11 @@ from django.views.generic import DetailView, ListView, TemplateView
 
 from school.courses.models import Course, CourseGroup, Lesson, LessonItem
 from school.problems.models import Submit
-from school.trackers.helpers import get_items_with_trackers, get_lessons_with_trackers
+from school.trackers.helpers import (
+    get_course_groups_with_trackers,
+    get_items_with_trackers,
+    get_lessons_with_trackers,
+)
 from school.trackers.models import LessonTracker
 from school.trackers.utils import get_or_create_trackers, mark_completed
 
@@ -22,6 +26,13 @@ class CoursesListView(ListView):
             .prefetch_related("courses")
             .all()
         )
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["groups"] = get_course_groups_with_trackers(
+            self.object_list, self.request.user
+        )
+        return ctx
 
 
 class CourseView(DetailView):

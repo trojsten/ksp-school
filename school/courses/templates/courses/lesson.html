@@ -50,19 +50,15 @@
         </aside>
 
         <div class="grow px-6 py-8">
-            {% if item.lesson_material %}
-                <div class="mx-auto prose prose-invert">
-                    <h1>{{ item.lesson_material.name }}</h1>
+            <div class="mx-auto prose prose-invert">
+                {% if item.lesson_material %}
+                {{ item.lesson_material.content|markdownify }}
+                {% elif item.problem %}
+                {{ item.problem.content|markdownify }}
+                {% endif %}
+            </div>
 
-                    {{ item.lesson_material.content|markdownify }}
-                </div>
-            {% elif item.problem %}
-                <div class="mx-auto prose prose-invert">
-                    <h1>{{ item.problem.name }}</h1>
-
-                    {{ item.problem.content|markdownify }}
-                </div>
-
+            {% if item.problem %}
                 <div class="max-w-prose mx-auto my-6">
                     {% if user.is_authenticated %}
                         <h2 class="text-white font-bold text-2xl mb-4">Odovzávanie programu</h2>

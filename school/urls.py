@@ -31,6 +31,7 @@ urlpatterns = [
     path("pages/<slug>/", pages.PageView.as_view()),
     path("", include("school.courses.urls")),
     path("", include("school.problems.urls")),
+    path("api/import/", include("school.imports.urls")),
 ]
 
 if settings.DEBUG:

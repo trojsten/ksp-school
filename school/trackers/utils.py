@@ -107,7 +107,7 @@ def recalculate_course(course: Course):
     )
 
     # First, recalculate all lessons.
-    for lesson in course.lesson_set:
+    for lesson in course.lesson_set.all():
         recalculate_lesson(lesson)
 
     # Then update course based on updated data.

@@ -67,6 +67,7 @@ class LessonMaterial(models.Model):
         verbose_name_plural = "učebné texty"
 
     name = models.CharField(max_length=64)
+    material_id = models.SlugField(unique=True)
     content = models.TextField(blank=True)
 
     def __str__(self):
@@ -78,7 +79,6 @@ class LessonItem(models.Model):
         verbose_name = "časť lekcie"
         verbose_name_plural = "časti lekcie"
         constraints = [
-            UniqueConstraint(fields=["lesson", "order"], name="unique_lesson_order"),
             UniqueConstraint(fields=["lesson", "slug"], name="unique_lesson_slug"),
         ]
         ordering = ["order"]

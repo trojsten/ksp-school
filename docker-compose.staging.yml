@@ -15,8 +15,6 @@ services:
       context: .
     ports:
       - "127.0.0.1:3011:8000"
-    volumes:
-      - ./:/app/
     depends_on:
       - db
     env_file:

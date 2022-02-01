@@ -1,8 +1,9 @@
 import os.path
 import zipfile
+from typing import Callable, List
 
+import frontmatter
 from django.conf import settings
-from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest, JsonResponse
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -22,37 +23,43 @@ class ImportView(View):
         return super().dispatch(request, *args, **kwargs)
 
 
+def _import_markdowns(infile, action: Callable[[str, dict, str], None]) -> List[str]:
+    ids = []
+    with zipfile.ZipFile(infile) as z:
+        for file in z.filelist:
+            name, ext = os.path.splitext(os.path.basename(file.filename))
+            if ext.lower() != ".md":
+                continue
+
+            data = frontmatter.loads(z.read(file))
+            action(name, data.metadata, data.content)
+            ids.append(name)
+    return ids
+
+
 class ImportMaterialsView(ImportView):
     def post(self, request, *args, **kwargs):
         form = ZipImportForm(request.POST, request.FILES)
 
-        if form.is_valid():
-            imported = 0
-            ids = []
-            with zipfile.ZipFile(form.cleaned_data["file"]) as z:
-                for file in z.filelist:
-                    name, ext = os.path.splitext(os.path.basename(file.filename))
-                    if ext.lower() != ".md":
-                        continue
-
-                    content = z.read(file).decode()
-                    LessonMaterial.objects.update_or_create(
-                        material_id=name,
-                        defaults={
-                            "content": content,
-                            "name": content.splitlines()[0].strip("# \t"),
-                        },
-                    )
-                    ids.append(name)
-                    imported += 1
-
-                orphans = list(
-                    LessonMaterial.objects.exclude(material_id__in=ids).values_list(
-                        "material_id", flat=True
-                    )
-                )
-
-            return JsonResponse({"ok": True, "imported": imported, "orphans": orphans})
-        else:
+        if not form.is_valid():
             data = form.errors.as_json()
             return JsonResponse({"errors": data, "ok": False}, status=400)
+
+        ids = _import_markdowns(
+            form.cleaned_data["file"],
+            lambda name, meta, body: LessonMaterial.objects.update_or_create(
+                material_id=name,
+                defaults={
+                    "name": meta.get("name", "???"),
+                    "content": body,
+                },
+            ),
+        )
+
+        orphans = list(
+            LessonMaterial.objects.exclude(material_id__in=ids).values_list(
+                "material_id", flat=True
+            )
+        )
+
+        return JsonResponse({"ok": True, "imported": len(ids), "orphans": orphans})

@@ -13,6 +13,7 @@ pillow = "~=8.4.0"
 trojsten-judge-client = "~=1.0.2"
 pygments = "~=2.11.2"
 django-debug-toolbar = "~=3.2.4"
+python-frontmatter = "~=1.0.0"
 
 [dev-packages]
 black = "~=21.12b0"

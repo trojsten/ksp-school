@@ -106,6 +106,9 @@ MEDIA_URL = "/media/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
+SCHOOL_IMPORT_TOKEN = env("SCHOOL_IMPORT_TOKEN")
+
+
 if DEBUG:
     import socket
 

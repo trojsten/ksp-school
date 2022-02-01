@@ -21,6 +21,8 @@ services:
       - USE_GUNICORN=True
     env_file:
       - .env
+    volumes:
+      - ./static:/app/static
 
 volumes:
   postgres_data:

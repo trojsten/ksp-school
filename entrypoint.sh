@@ -19,9 +19,13 @@ done
 echo ">>> Migrating database"
 python manage.py migrate --force-color
 
-if [ -z "$USE_GUNICORN" ]; then
+
+if [ ! -z "$USE_GUNICORN" ]; then
+  echo ">>> Collect static"
+  python manage.py collectstatic --no-input
+
   echo ">>> Starting Gunicorn"
-  python -m gunicorn --workers 4 school.wsgi:app
+  python -m gunicorn --workers 4 --bind 0.0.0.0:8000 school.wsgi
 else
   echo ">>> Starting local server"
   python manage.py runserver 0.0.0.0:8000 --force-color

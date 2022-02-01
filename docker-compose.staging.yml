@@ -1,0 +1,26 @@
+version: "3.4"
+
+services:
+  db:
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_USER=school
+      - POSTGRES_PASSWORD=school
+      - POSTGRES_DB=school
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  web:
+    build:
+      context: .
+    ports:
+      - "127.0.0.1:3011:8000"
+    volumes:
+      - ./:/app/
+    depends_on:
+      - db
+    env_file:
+      - .env
+
+volumes:
+  postgres_data:

@@ -79,7 +79,6 @@ class LessonItem(models.Model):
         verbose_name = "časť lekcie"
         verbose_name_plural = "časti lekcie"
         constraints = [
-            UniqueConstraint(fields=["lesson", "order"], name="unique_lesson_order"),
             UniqueConstraint(fields=["lesson", "slug"], name="unique_lesson_slug"),
         ]
         ordering = ["order"]

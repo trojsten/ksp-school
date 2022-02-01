@@ -19,5 +19,6 @@ RUN pip install --upgrade "pipenv==2021.11.23"
 COPY Pipfile Pipfile.lock /app/
 RUN pipenv install --system --deploy
 
+COPY --from=frontend-build /app/school/static/app.css /app/school/static/app.css
 COPY . /app/
 CMD ["/app/entrypoint.sh"]

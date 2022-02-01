@@ -9,6 +9,9 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 
+from school.courses.models import Course
+from school.trackers.utils import recalculate_course
+
 
 @method_decorator(csrf_exempt, name="dispatch")
 class ImportView(View):
@@ -32,3 +35,11 @@ def _import_markdowns(infile, action: Callable[[str, dict, str], None]) -> List[
             action(name, data.metadata, data.content)
             ids.append(name)
     return ids
+
+
+class RecalculateProgressView(ImportView):
+    def post(self, request, *args, **kwargs):
+        for course in Course.objects.all():
+            recalculate_course(course)
+
+        return JsonResponse({"ok": True})

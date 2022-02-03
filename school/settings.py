@@ -99,6 +99,7 @@ STATIC_URL = "/static/"
 STATIC_ROOT = "/app/static/"
 STATICFILES_DIRS = [BASE_DIR / "school" / "static"]
 
+DEFAULT_FILE_STORAGE = "school.storages.OverwriteFileSystemStorage"
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
 

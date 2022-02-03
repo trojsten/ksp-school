@@ -23,6 +23,7 @@ services:
       - .env
     volumes:
       - ./static:/app/static
+      - ./media:/app/media
 
 volumes:
   postgres_data:

@@ -24,7 +24,10 @@ class SchoolImageTreeprocessor(Treeprocessor):
             elem.set(
                 "src",
                 "/".join(
-                    map(lambda x: x.strip("/"), ["", settings.MEDIA_URL, image_url])
+                    map(
+                        lambda x: x.strip("/"),
+                        ["", settings.MEDIA_URL, "assets", image_url],
+                    )
                 ),
             )
 

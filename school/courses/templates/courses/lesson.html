@@ -76,16 +76,16 @@
                 </div>
             {% endif %}
 
-            <div class="max-w-prose mx-auto flex my-10">
+            <div class="max-w-prose mx-auto flex flex-wrap gap-2 my-10">
                 {% if previous_item %}
                     <a href="{% url 'lesson' lesson.course.slug lesson.slug previous_item.slug %}" class="btn">
                         <i data-feather="arrow-left" class="h-4"></i>
-                        Predchádzajúci materiál
+                        Späť
                     </a>
                 {% endif %}
                 {% if next_item %}
                     <a href="{% url 'lesson' lesson.course.slug lesson.slug next_item.slug %}" class="btn ml-auto">
-                        Nasledujúci materiál
+                        Ďalej
                         <i data-feather="arrow-right" class="h-4"></i>
                     </a>
                 {% endif %}

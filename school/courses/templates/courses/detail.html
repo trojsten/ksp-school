@@ -32,15 +32,17 @@
                         {{ lt.lesson.name }}
 
                         {% if lt.tracker %}
-                            {% if lt.tracker.state == lt.tracker.state.STARTED %}
-                            <span class="text-xs ml-auto text-blue-300">{{ lt.tracker.completed }}/{{ lt.tracker.total }}</span>
-                            {% elif lt.tracker.state == lt.tracker.state.COMPLETE %}
-                            <i class="w-4 h-4 ml-auto text-green-400" data-feather="check"></i>
-                            {% elif lt.tracker.state == lt.tracker.state.FASTFORWARD %}
-                            <div data-tippy-content="Túto lekciu si preskočil/-a" class="ml-auto">
-                                <i class="w-4 h-4 text-cyan-500" data-feather="fast-forward"></i>
+                            <div class="ml-auto shrink-0">
+                                {% if lt.tracker.state == lt.tracker.state.STARTED %}
+                                <span class="text-xs text-blue-300">{{ lt.tracker.completed }}/{{ lt.tracker.total }}</span>
+                                {% elif lt.tracker.state == lt.tracker.state.COMPLETE %}
+                                <i class="w-4 h-4 text-green-400" data-feather="check"></i>
+                                {% elif lt.tracker.state == lt.tracker.state.FASTFORWARD %}
+                                <div data-tippy-content="Túto lekciu si preskočil/-a">
+                                    <i class="w-4 h-4 text-cyan-500" data-feather="fast-forward"></i>
+                                </div>
+                                {% endif %}
                             </div>
-                            {% endif %}
                         {% endif %}
                     </a>
                     {% endfor %}

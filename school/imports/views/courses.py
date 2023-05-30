@@ -72,14 +72,18 @@ class ImportCoursesView(ImportView):
                             problem = None
 
                             if item["material"]:
-                                material = LessonMaterial.objects.get(
+                                material = LessonMaterial.objects.filter(
                                     material_id=item["material"]
-                                )
+                                ).first()
+                                if material is None:
+                                    return JsonResponse({"errors": f"Material '{item['material']}' don't exist.'", "ok": False}, status=400)
 
                             if item["problem"]:
-                                problem = Problem.objects.get(
+                                problem = Problem.objects.filter(
                                     testovac_id=item["problem"]
-                                )
+                                ).first()
+                                if problem is None:
+                                    return JsonResponse({"errors": f"Problem '{item['material']}' don't exist.'", "ok": False}, status=400)
 
                             item_object, _ = LessonItem.objects.update_or_create(
                                 lesson=lesson_object,

@@ -90,7 +90,7 @@ def recalculate_lesson(lesson: Lesson):
         .annotate(completed=Count("id", filter=Q(completed_at__isnull=False)))
     }
 
-    trackers = LessonTracker.objects.all()
+    trackers = LessonTracker.objects.filter(lesson=lesson)
     for tracker in trackers:
         tracker.completed = completed_count.get(tracker.user_id, 0)
         if tracker.completed != tracker.total and not tracker.fastforward:
@@ -118,7 +118,7 @@ def recalculate_course(course: Course):
         .annotate(completed=Count("id", filter=Q(completed_at__isnull=False)))
     }
 
-    trackers = CourseTracker.objects.all()
+    trackers = CourseTracker.objects.filter(course=course)
     for tracker in trackers:
         tracker.completed = completed_count.get(tracker.user_id, 0)
         if tracker.completed != tracker.total:

@@ -117,6 +117,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 SCHOOL_IMPORT_TOKEN = env("SCHOOL_IMPORT_TOKEN")
+TESTOVAC_CLIENT = env("TESTOVAC_CLIENT", default="KSP-SCHOOL")
+TESTOVAC_HOST = env("TESTOVAC_HOST", default="experiment")
+TESTOVAC_PORT = env("TESTOVAC_PORT", default=12347)
+TESTOVAC_TOKEN = env("TESTOVAC_TOKEN", default="")
 
 
 if DEBUG:

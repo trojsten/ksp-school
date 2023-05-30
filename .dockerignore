@@ -1,4 +1,9 @@
-.git/
-node_modules/
 __pycache__
-static/
+node_modules
+.idea
+.github
+.git
+.env
+.ruff_cache
+/uploads/
+/static/

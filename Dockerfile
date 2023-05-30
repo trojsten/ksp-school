@@ -1,24 +1,32 @@
 # Frontend builder
-FROM node:current AS frontend-build
-WORKDIR /app
-RUN npm install -g pnpm@~6.24.3
-COPY package.json pnpm-lock.yaml /app/
-RUN pnpm install
+FROM node:20-alpine AS frontend-build
 
-COPY . /app/
-RUN pnpm run build
-CMD ["pnpm", "run", "dev"]
+WORKDIR /app
+
+COPY package.json package-lock.json /app/
+RUN npm install
+
+COPY school ./school
+COPY css ./css
+COPY tailwind.config.js ./tailwind.config.js
+RUN npm run build
+CMD ["npm", "run", "dev"]
 
 # Django container
-FROM python:3.10 AS base
+FROM python:3.11-slim-bullseye AS base
 WORKDIR /app
+RUN useradd --create-home appuser
+
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
+ENV PATH=/home/appuser/.local/bin:$PATH
 
-RUN pip install --upgrade "pipenv==2021.11.23"
-COPY Pipfile Pipfile.lock /app/
+USER appuser
+
+RUN pip install --upgrade pipenv
+COPY Pipfile Pipfile.lock ./
 RUN pipenv install --system --deploy
 
-COPY --from=frontend-build /app/school/static/app.css /app/school/static/app.css
 COPY . /app/
+COPY --from=frontend-build /app/school/static/app.css /app/school/static/app.css
 CMD ["/app/entrypoint.sh"]

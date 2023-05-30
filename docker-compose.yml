@@ -27,7 +27,8 @@ services:
       context: .
       target: frontend-build
     volumes:
-      - ./:/app/
+      - ./school:/app/school
+      - ./css:/app/css
     tty: true
 
 volumes:

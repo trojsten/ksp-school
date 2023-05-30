@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("courses", "0003_lessonitem_problem"),
         ("problems", "0002_alter_submit_options"),

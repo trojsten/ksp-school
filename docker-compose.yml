@@ -19,6 +19,9 @@ services:
       - ./:/app/
     depends_on:
       - db
+    environment:
+      - DEBUG=True
+      - DATABASE_URL=psql://school:school@db/school
     env_file:
       - .env
 

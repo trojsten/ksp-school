@@ -27,7 +27,7 @@
             <div class="relative select-none" x-data="{ open: false }">
                 <button class="flex gap-1.5 items-center cursor-pointer" id="main-nav-dropdown"
                         x-on:click="open = !open" :aria-expanded="open" aria-controls="main-nav-dropdown-tray">
-                    <img class="w-6 h-6 bg-gray-100 rounded-full shadow-inner" src="https://i.pravatar.cc/64">
+                    <img class="w-6 h-6 bg-gray-100 rounded-full shadow-inner" src="https://id.trojsten.sk/profile/{{ user.username }}/avatar">
                     <span class="font-medium">{{ user.get_full_name }}</span>
                     <i data-feather="chevron-down" class="w-4 h-4"></i>
                 </button>
@@ -35,12 +35,12 @@
                 <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-800 border border-gray-600 text-white text-sm"
                      id="main-nav-dropdown-tray" x-show="open" x-on:click.outside="open = false" x-cloak>
                     <div class="py-1" role="none">
-                        <a href="{% url 'logout' %}" class="hover:bg-gray-700 block px-4 py-2" role="menuitem" tabindex="-1">Odhlásiť sa</a>
+                        <a href="{% url 'oidc_logout' %}" class="hover:bg-gray-700 block px-4 py-2" role="menuitem" tabindex="-1">Odhlásiť sa</a>
                     </div>
                 </div>
             </div>
             {% else %}
-                <a href="{% url 'login' %}">Prihlásiť sa</a>
+                <a href="{% url 'oidc_authentication_init' %}">Prihlásiť sa</a>
             {% endif %}
         </div>
     </nav>

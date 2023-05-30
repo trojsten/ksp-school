@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("problems", "0001_initial"),
         ("courses", "0002_lessonmaterial_alter_course_slug_alter_lesson_slug_and_more"),

@@ -13,6 +13,17 @@
     "description": {
       "type": "string"
     },
+    "order": {
+      "type": "integer",
+      "default": 0
+    },
+    "recommended_courses": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "string"
+      }
+    },
     "lessons": {
       "type": "array",
       "items": {

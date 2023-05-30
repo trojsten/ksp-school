@@ -25,6 +25,8 @@ class ImportCoursesView(ImportView):
         ) as f:
             validate = fastjsonschema.compile(json.load(f))
 
+        recommended_courses = {}
+
         ids = []
         with zipfile.ZipFile(form.cleaned_data["file"]) as z:
             for file in z.filelist:
@@ -44,8 +46,11 @@ class ImportCoursesView(ImportView):
                         "name": data["name"],
                         "short_description": data["short_description"],
                         "description": data["description"],
+                        "order": data["order"],
                     },
                 )
+
+                recommended_courses[course.id] = data["recommended_courses"]
 
                 touched_lessons = []
                 for i, layer in enumerate(data["lessons"]):
@@ -96,6 +101,11 @@ class ImportCoursesView(ImportView):
                 ).delete()
 
                 ids.append(name)
+
+        for course_id in recommended_courses:
+            Course.objects.get(id=course_id).recommended_courses.set(
+                Course.objects.filter(slug__in=recommended_courses[course_id])
+            )
 
         orphans = list(
             Course.objects.exclude(slug__in=ids).values_list("slug", flat=True)

@@ -12,7 +12,7 @@ from school.trackers.helpers import (
     get_items_with_trackers,
     get_lessons_with_trackers,
 )
-from school.trackers.models import LessonTracker
+from school.trackers.models import LessonTracker, TrackerState
 from school.trackers.utils import get_or_create_trackers, mark_completed
 
 
@@ -22,7 +22,6 @@ class CoursesListView(ListView):
     def get_queryset(self):
         return (
             CourseGroup.objects.order_by("order")
-            .filter(courses__isnull=False)
             .prefetch_related("courses")
             .all()
         )
@@ -52,6 +51,7 @@ class CourseView(DetailView):
             layers.append(list(layer_lessons))
 
         ctx["layers"] = layers
+        ctx["done"] = all(all(lesson.tracker is not None and lesson.tracker.state == TrackerState.COMPLETE for lesson in layer) for layer in layers)
         return ctx
 
 

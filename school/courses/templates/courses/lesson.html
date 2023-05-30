@@ -16,8 +16,8 @@
                 <img src="{{ lesson.course.image.url }}" class="w-16 h-16 border border-gray-600 rounded-md shadow-inner">
                 {% endif %}
 
-                <div class="text-white">
-                    <a href="{% url 'course_detail' lesson.course.slug %}" class="font-medium text-gray-300 text-base">{{ lesson.course.name }}</a>
+                <div class="text-white w-full">
+                    <a href="{% url 'course_detail' lesson.course.slug %}" class="font-medium text-gray-300 text-base flex w-full items-center">{{ lesson.course.name }} <span class="ml-auto text-xs">Späť na kurz</span></a>
                     <div class="font-bold text-xl lg:text-2xl">{{ lesson.name }}</div>
                 </div>
             </div>
@@ -87,6 +87,11 @@
                     <a href="{% url 'lesson' lesson.course.slug lesson.slug next_item.slug %}" class="btn ml-auto">
                         Ďalej
                         <i data-feather="arrow-right" class="h-4"></i>
+                    </a>
+                {% else %}
+                    <a href="{% url 'course_detail' lesson.course.slug %}" class="btn ml-auto">
+                        Naspäť na kurz
+                        <i data-feather="corner-right-up" class="h-4"></i>
                     </a>
                 {% endif %}
             </div>

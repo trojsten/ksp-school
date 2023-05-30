@@ -53,4 +53,19 @@
             {% endfor %}
         </div>
     </div>
+
+    {% if done %}
+        <div class="container mx-auto flex flex-col lg:flex-row py-10 lg:py-20 px-6 lg:items-center gap-2 lg:gap-6 text-white">
+                Gratulujeme, dokončil si tento kurz :partyparrot:
+                {% if course.recommended_courses.all.count %}
+                    Asi sa pýtaš, čo ďalej, a my to vieme. Môžeš pokračovať týmito kurzami:
+                    <ul>
+                    {% for course in course.recommended_courses.all %}
+                        <li><a href="{% url 'course_detail' course.slug %}">{{ course }}</a></li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+        </div>
+    {% endif %}
+
 {% endblock %}

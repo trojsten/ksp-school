@@ -8,12 +8,15 @@ class Course(models.Model):
     class Meta:
         verbose_name = "kurz"
         verbose_name_plural = "kurzy"
+        ordering = ["order"]
 
     name = models.CharField(max_length=64)
+    order = models.IntegerField(default=0)
     slug = models.SlugField(unique=True)
     image = models.ImageField(blank=True, null=True)
     short_description = models.CharField(max_length=200, blank=True)
     description = models.TextField(blank=True)
+    recommended_courses = models.ManyToManyField("Course", blank=True)
 
     def __str__(self):
         return self.name

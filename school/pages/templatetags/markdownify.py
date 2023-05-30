@@ -2,7 +2,7 @@ from django import template
 from django.utils.safestring import mark_safe
 from markdown import markdown
 
-from school.pages.markdown_extensions import SchoolImageExtension
+from school.pages.markdown_extensions import *
 
 register = template.Library()
 
@@ -22,7 +22,7 @@ def markdownify(content):
                 "md_in_html",
                 "sane_lists",
                 "tables",
-                SchoolImageExtension(),
+                KspSchoolExtension(),
             ],
         )
     )

@@ -1,14 +1,19 @@
 import os.path
 
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseNotAllowed, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, FormView
 from judge_client.client import JudgeConnectionError
 
 from school.courses.models import LessonItem
 from school.problems import forms
+from school.problems.forms import ProtocolForm
 from school.problems.models import Problem, Submit
 
 
@@ -96,3 +101,30 @@ class SubmitCreateView(LoginRequiredMixin, FormView):
     def form_invalid(self, form):
         # TODO: Redirect back.
         return JsonResponse(form.errors)
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class UploadProtocolView(View):
+    def post(self, request, *args, **kwargs):
+        if not settings.TESTOVAC_TOKEN:
+            return JsonResponse(
+                {"errors": "Protocol upload is disabled.", "ok": False}, status=403
+            )
+
+        if settings.TESTOVAC_TOKEN != request.headers.get("X-Token", None):
+            return JsonResponse(
+                {"errors": "Wrong access token.", "ok": False}, status=403
+            )
+
+        form = ProtocolForm(request.POST, request.FILES)
+
+        if not form.is_valid():
+            data = form.errors.as_json()
+            return JsonResponse({"errors": data, "ok": False}, status=400)
+
+        submit = get_object_or_404(Submit, id=form.cleaned_data["submit"])
+        submit.protocol = form.cleaned_data["protocol"].read().decode("utf-8")
+        submit.result = submit.protocol_object.result
+        submit.save()
+
+        return JsonResponse({"ok": True})

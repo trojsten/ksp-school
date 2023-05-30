@@ -1,6 +1,6 @@
 from django.urls import path
 
-from school.problems.views import SubmitCreateView, SubmitDetailView
+from school.problems.views import SubmitCreateView, SubmitDetailView, UploadProtocolView
 
 urlpatterns = [
     path(
@@ -12,5 +12,9 @@ urlpatterns = [
         "problems/<problem>/submits/",
         SubmitCreateView.as_view(),
         name="submit_create",
+    ),
+    path(
+        "problems/protocol_upload/",
+        UploadProtocolView.as_view(),
     ),
 ]

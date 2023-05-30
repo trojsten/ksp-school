@@ -5,7 +5,10 @@ import environ
 env = environ.Env()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = env(
+    "SECRET_KEY",
+    default="django-insecure-eet3aeru3Ajeim1thieN3ib7caerahnuv0Thuen4le9di4zae2rai1AiW5izuRoh",
+)
 DEBUG = env("DEBUG", default=False)
 
 ALLOWED_HOSTS = env("ALLOWED_HOSTS", default=[])
@@ -18,7 +21,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "social_django",
+    "mozilla_django_oidc",
     "school.users",
     "school.pages",
     "school.courses",
@@ -62,27 +65,31 @@ DATABASES = {
 }
 
 AUTH_USER_MODEL = "users.User"
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
-]
+AUTH_PASSWORD_VALIDATORS = []  # Empty, because we use OIDC
 AUTHENTICATION_BACKENDS = [
-    "school.users.backends.TrojstenOAuth2",
+    "school.users.auth.TrojstenOIDCAB",
+    "django.contrib.auth.backends.ModelBackend",
 ]
-SOCIAL_AUTH_JSONFIELD_ENABLED = True
-SOCIAL_AUTH_TROJSTEN_KEY = env("TROJSTEN_AUTH_CLIENT")
-SOCIAL_AUTH_TROJSTEN_SECRET = env("TROJSTEN_AUTH_SECRET")
-LOGIN_URL = "/auth/login/"
+
+OIDC_OP_JWKS_ENDPOINT = env(
+    "OIDC_OP_JWKS_ENDPOINT",
+    default="https://id.trojsten.sk/oauth/.well-known/jwks.json",
+)
+OIDC_OP_AUTHORIZATION_ENDPOINT = env(
+    "OIDC_OP_AUTHORIZATION_ENDPOINT", default="https://id.trojsten.sk/oauth/authorize/"
+)
+OIDC_OP_USER_ENDPOINT = env(
+    "OIDC_OP_USER_ENDPOINT", default="https://id.trojsten.sk/oauth/userinfo/"
+)
+OIDC_OP_TOKEN_ENDPOINT = env(
+    "OIDC_OP_TOKEN_ENDPOINT", default="https://id.trojsten.sk/oauth/token/"
+)
+OIDC_RP_SCOPES = "openid email profile"
+OIDC_RP_SIGN_ALGO = "RS256"
+OIDC_RP_CLIENT_ID = env("OIDC_RP_CLIENT_ID")
+OIDC_RP_CLIENT_SECRET = env("OIDC_RP_CLIENT_SECRET")
+
+LOGIN_URL = "oidc_authentication_init"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 

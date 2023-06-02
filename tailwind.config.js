@@ -8,6 +8,18 @@ module.exports = {
         sans: ['Inter', ...defaultTheme.fontFamily.sans],
         mono: ['"Fira Mono"', ...defaultTheme.fontFamily.mono],
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            'code::before': {
+              content: '',
+            },
+            'code::after': {
+              content: '',
+            },
+          },
+        },
+      },
     },
   },
   plugins: [

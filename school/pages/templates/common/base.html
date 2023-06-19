@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load django_htmx %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -53,6 +54,9 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous"></script>
+
+    <script defer src="{% static "vendor/htmx.min.js" %}"></script>
+    {% django_htmx_script %}
 
     <script>
         tippy('[data-tippy-content]')

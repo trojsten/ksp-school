@@ -1,4 +1,5 @@
 {% extends 'common/base.html' %}
+{% load static %}
 
 {% block title %}KSP School{% endblock %}
 
@@ -7,34 +8,33 @@
     <div class="container mx-auto flex flex-col lg:flex-row py-10 lg:py-16 px-6 lg:items-center">
         <div class="w-full lg:w-1/2">
             <div class="lg:max-w-lg">
-                <h1 class="tracking-tight text-3xl text-white font-bold lg:text-5xl">Chceš kódiť jak ďábel?</h1>
-                <p class="mt-6 text-gray-400">
-                    KSP School obsahuje kombináciu tých najkvalitnejších materiálov a úloh, pomocou ktorých naučíme programovať aj teba!
+                <h1 class="tracking-tight text-3xl text-white font-bold lg:text-7xl">Chceš kódiť jak ďábel?</h1>
+                <p class="mt-6 text-gray-400 lg:text-2xl">
+                    KSP School obsahuje texty a úlohy,
+                    pomocou ktorých sa naučíš programovať aj ty!
                 </p>
                 <a href="{% url "course_list" %}" class="inline-block px-4 py-2 mt-6 text-xl font-medium text-white bg-blue-600 hover:bg-blue-500 rounded-md">Poďme na to!</a>
             </div>
         </div>
         <div class="w-full lg:w-1/2 flex items-center justify-center">
-            <img src="carbon.png" class="w-full h-full lg:max-w-2xl">
+            <img src="{% static 'dabel.png' %}" class="w-full h-full lg:max-w-2xl">
         </div>
     </div>
 
     <div class="bg-gray-800 border-t border-b border-gray-600 text-gray-400">
-        <div class="container mx-auto px-6 py-10 lg:py-16">
-            <p class="max-w-3xl">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda beatae cumque dolor doloremque eum eveniet incidunt, ipsam magnam neque, numquam omnis pariatur quaerat quisquam quod, recusandae repudiandae soluta totam voluptates.
-            </p>
-        </div>
-    </div>
-
-    <div class="text-gray-400">
         <div class="container mx-auto px-6 py-10 lg:py-24 flex items-center flex-col lg:flex-row">
             <div class="w-full lg:w-1/2">
                 <h2 class="text-2xl font-bold text-white lg:text-4xl">Učebné materiály</h2>
                 <p class="mt-4">
-                    V KSP School nájdeš množstvo učebných textov a videí o Pythone, C++ a rôznych zaujímavých algoritmoch a dátových štruktúrach, ktoré posunú
-                    tvoju úroveň programovania na ďalší level.
+                    V KSP School nájdeš množstvo učebných textov o rôznych témach z informatiky,
+                    ktoré posunú tvoju úroveň programovania na ďalší level.
                 </p>
+                <ul>
+                    <li><b>Python</b> Lorem ipsum dolor sit amet</li>
+                    <li><b>C++</b> Lorem ipsum dolor sit amet</li>
+                    <li><b>Algoritmy</b> Lorem ipsum dolor sit amet</li>
+                    <li><b>Dátové štruktúry</b> Lorem ipsum dolor sit amet</li>
+                </ul>
             </div>
             <div class="w-full lg:w-1/2 flex items-center justify-center">
                 [masívny obrázok materiálov]
@@ -46,17 +46,26 @@
                 [teplomery]
             </div>
             <div class="w-full lg:w-1/2">
-                <h2 class="text-2xl font-bold text-white lg:text-4xl">Automatický testovač</h2>
+                <h2 class="text-2xl font-bold text-white lg:text-4xl">Programátorské úlohy</h2>
                 <p class="mt-4">
-                    Náš dvorný testovač automaticky otestuje tvoj kód a hneď sa dozvieš, či je tvoje riešenie správne.
+                    Pripravili sme si pre teba aj programátorské úlohy, na ktorých si môžeš otestovať nadobudnuté vedomosti.
+                    Tieto úlohy môžeš riešiť a odovzdávať.
+                    Tvoje riešenia budú po odovzdaní automaticky otestované. Okamžite sa dozvieš,
+                    či sú správne a dostatočne efektívne.
                 </p>
             </div>
         </div>
 
         <div class="container mx-auto px-6 py-10 lg:py-24 flex items-center flex-col lg:flex-row">
             <div class="w-full lg:w-1/2">
-                <h2 class="text-2xl font-bold text-white lg:text-4xl">Manuálny testovač</h2>
-                <p class="mt-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci amet architecto commodi consequatur, dolor ducimus ea esse est itaque nobis, non possimus quidem quo similique temporibus, vel veritatis voluptas voluptatum.</p>
+                <h2 class="text-2xl font-bold text-white lg:text-4xl">Dlhoročná tradícia</h2>
+                <p class="mt-4">
+                    KSP School vzniklo v dielňach
+                    <a href="https://www.ksp.sk/" class="text-blue-300 hover:text-blue-400 underline">
+                        Korešpondenčného semináru z programovania.
+                    </a>
+                    V KSP sa venujeme neformálnemu vzdelávaniu a popularizácii informatiky medzi žiakmi stredných škôl už od roku 1982.
+                </p>
             </div>
             <div class="w-full lg:w-1/2 flex items-center justify-center">
                 ??
@@ -64,33 +73,41 @@
         </div>
     </div>
 
-    <div class="bg-gray-800 border-t border-b border-gray-600 text-gray-400 px-6 py-10 lg:py-16">
-        <h2 class="text-2xl font-bold text-white lg:text-4xl text-center">Povedali o nás</h2>
-        <div class="container mx-auto grid grid-cols-1 lg:grid-cols-3 mt-6 gap-2">
-            <blockquote class="bg-gray-700 border border-gray-600 rounded-md py-3 px-4  text-white">
-                <p class="text-xl">"masívne"</p>
+{#    <div class="bg-gray-800 border-t border-b border-gray-600 text-gray-400 px-6 py-10 lg:py-16">#}
+{#        <h2 class="text-2xl font-bold text-white lg:text-4xl text-center">Povedali o nás</h2>#}
+{#        <div class="container mx-auto grid grid-cols-1 lg:grid-cols-3 mt-6 gap-2">#}
+{#            <blockquote class="bg-gray-700 border border-gray-600 rounded-md py-3 px-4  text-white">#}
+{#                <p class="text-xl">"masívne"</p>#}
+{##}
+{#                <div class="flex items-center mt-4 text-sm">#}
+{#                    <img src="https://i.pravatar.cc/64" class="rounded-full w-7 mr-2">#}
+{#                    <span class="font-medium">Jožko Mrkvička</span>, študent#}
+{#                </div>#}
+{#            </blockquote>#}
+{#            <blockquote class="bg-gray-700 border border-gray-600 rounded-md py-3 px-4  text-white">#}
+{#                <p class="text-xl">"menej masívne"</p>#}
+{##}
+{#                <div class="flex items-center mt-4 text-sm">#}
+{#                    <img src="https://i.pravatar.cc/64" class="rounded-full w-7 mr-2">#}
+{#                    <span class="font-medium">Jožko Mrkvička</span>, študent#}
+{#                </div>#}
+{#            </blockquote>#}
+{#            <blockquote class="bg-gray-700 border border-gray-600 rounded-md py-3 px-4  text-white">#}
+{#                <p class="text-xl">"slabo masívne"</p>#}
+{##}
+{#                <div class="flex items-center mt-4 text-sm">#}
+{#                    <img src="https://i.pravatar.cc/64" class="rounded-full w-7 mr-2">#}
+{#                    <span class="font-medium">Jožko Mrkvička</span>, študent#}
+{#                </div>#}
+{#            </blockquote>#}
+{#        </div>#}
+{#    </div>#}
 
-                <div class="flex items-center mt-4 text-sm">
-                    <img src="https://i.pravatar.cc/64" class="rounded-full w-7 mr-2">
-                    <span class="font-medium">Jožko Mrkvička</span>, študent
-                </div>
-            </blockquote>
-            <blockquote class="bg-gray-700 border border-gray-600 rounded-md py-3 px-4  text-white">
-                <p class="text-xl">"menej masívne"</p>
-
-                <div class="flex items-center mt-4 text-sm">
-                    <img src="https://i.pravatar.cc/64" class="rounded-full w-7 mr-2">
-                    <span class="font-medium">Jožko Mrkvička</span>, študent
-                </div>
-            </blockquote>
-            <blockquote class="bg-gray-700 border border-gray-600 rounded-md py-3 px-4  text-white">
-                <p class="text-xl">"slabo masívne"</p>
-
-                <div class="flex items-center mt-4 text-sm">
-                    <img src="https://i.pravatar.cc/64" class="rounded-full w-7 mr-2">
-                    <span class="font-medium">Jožko Mrkvička</span>, študent
-                </div>
-            </blockquote>
-        </div>
+    <div class="text-gray-400 container mx-auto px-6 py-10 w-full">
+        <p class="text-center w-full">
+            &copy; Korešpondenčný seminár z programovania, 2023. Sme úžasní a je to opensource, urob si PR.
+        </p>
     </div>
+
+
 {% endblock %}

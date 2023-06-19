@@ -1,15 +1,19 @@
 {% extends 'common/base.html' %}
 {% load static %}
 
-{% block title %}KSP School{% endblock %}
+{% block title %}KSP School &ndash; Online výučba programovania{% endblock %}
+
+{% block meta %}
+    <meta name="description"
+          content="Kvalitné učebné materiály a úlohy, vďaka ktorým sa naučíš programovať aj ty! Či už si úplný začiatočník alebo pokročilejší programátor, máme niečo pre každého.">
+{% endblock %}
 
 {% block body %}
-
     <div class="container mx-auto flex flex-col lg:flex-row py-10 lg:py-16 px-6 lg:items-center">
         <div class="w-full lg:w-1/2">
             <div class="lg:max-w-lg">
                 <h1 class="tracking-tight text-3xl text-white font-bold lg:text-7xl">Chceš kódiť jak ďábel?</h1>
-                <p class="mt-6 text-gray-400 lg:text-2xl">
+                <p class="mt-6 text-gray-400 lg:text-xl">
                     KSP School obsahuje texty a úlohy,
                     pomocou ktorých sa naučíš programovať aj ty!
                 </p>
@@ -17,37 +21,50 @@
             </div>
         </div>
         <div class="w-full lg:w-1/2 flex items-center justify-center">
-            <img src="{% static 'dabel.png' %}" class="w-full h-full lg:max-w-2xl">
+            <img src="{% static 'dablik.png' %}" alt="Ďáblik" class="w-full h-full lg:max-w-xl">
         </div>
     </div>
 
     <div class="bg-gray-800 border-t border-b border-gray-600 text-gray-400">
-        <div class="container mx-auto px-6 py-10 lg:py-24 flex items-center flex-col lg:flex-row">
-            <div class="w-full lg:w-1/2">
+        <div class="container mx-auto px-6 py-10 lg:py-24 flex items-center flex-col lg:flex-row gap-6">
+            <div class="w-full lg:w-1/2 text-justify">
                 <h2 class="text-2xl font-bold text-white lg:text-4xl">Učebné materiály</h2>
-                <p class="mt-4 text-justify">
+                <p class="mt-4">
                     V KSP School nájdeš množstvo učebných textov o rôznych témach z informatiky,
                     ktoré posunú tvoju úroveň programovania na ďalší level.
                 </p>
-                <ul>
-                    <li><b>Python:</b> či už si nikdy neprogramoval/a, alebo máš veci ako lambda funkcie a dedičnosť v malíčku, máme niečo pre každého.</li>
-                    <li><b>C++:</b> ak sa ti zdá Python príliš pomalý, alebo jednoduchý, je tu pre teba C++.</li>
-                    <li><b>Algoritmy a dátové štruktúry:</b> programovací jazyk nie je jediný spôsob, ako zrýchliť program.
-                    Ak sa naučíš dáta správne ukladať a správne s nimi pracovať, budú tvoje programy ešte rýchlejšie.</li>
-                </ul>
+
+                <div class="mt-8 space-y-6">
+                    <div class="relative pl-9">
+                        <iconify-icon icon="devicon-plain:python" class="absolute left-1 top-0.5 text-blue-500" width="1.25rem"></iconify-icon>
+                        <b class="text-white mr-2">Python</b>
+                        Či už si nikdy neprogramoval/a, alebo máš veci ako lambda funkcie a dedičnosť v malíčku, máme niečo pre každého.
+                    </div>
+                    <div class="relative pl-9">
+                        <iconify-icon icon="devicon-plain:cplusplus" class="absolute left-1 top-0.5 text-blue-500" width="1.25rem"></iconify-icon>
+                        <b class="text-white mr-2">C++</b>
+                        Ak sa ti zdá Python príliš pomalý, alebo jednoduchý, máme tu pre teba kurzy C++.
+                    </div>
+                    <div class="relative pl-9">
+                        <iconify-icon icon="ph:lightning-fill" class="absolute left-1 top-0.5 text-blue-500" width="1.25rem"></iconify-icon>
+                        <b class="text-white mr-2">Algoritmy a dátové štruktúry</b>
+                        Programovací jazyk nie je jediný spôsob, ako zrýchliť program.
+                        Ak sa naučíš dáta správne ukladať a správne s nimi pracovať, budú tvoje programy ešte rýchlejšie.
+                    </div>
+                </div>
             </div>
             <div class="w-full lg:w-1/2 flex items-center justify-center">
-                [masívny obrázok materiálov]
+                {% include "pages/home_text.html" %}
             </div>
         </div>
 
-        <div class="container mx-auto px-6 py-10 lg:py-24 flex items-center flex-col lg:flex-row">
+        <div class="container mx-auto px-6 py-10 lg:py-24 flex items-center flex-col-reverse lg:flex-row gap-6">
             <div class="w-full lg:w-1/2 flex items-center justify-center">
-                [teplomery]
+                {% include "pages/home_code.html" %}
             </div>
-            <div class="w-full lg:w-1/2">
+            <div class="w-full lg:w-1/2 text-justify">
                 <h2 class="text-2xl font-bold text-white lg:text-4xl">Programátorské úlohy</h2>
-                <p class="mt-4 text-justify">
+                <p class="mt-4">
                     Pripravili sme si pre teba aj programátorské úlohy, na ktorých si môžeš otestovať nadobudnuté vedomosti.
                     Tieto úlohy môžeš riešiť a odovzdávať.
                     Tvoje riešenia budú po odovzdaní automaticky otestované. Okamžite sa dozvieš,
@@ -56,14 +73,13 @@
             </div>
         </div>
 
-        <div class="container mx-auto px-6 py-10 lg:py-24 flex items-center flex-col lg:flex-row">
+        <div class="container mx-auto px-6 py-10 lg:py-24 flex items-center flex-col lg:flex-row gap-6">
             <div class="w-full lg:w-1/2">
                 <h2 class="text-2xl font-bold text-white lg:text-4xl">Dlhoročná tradícia</h2>
                 <p class="mt-4 text-justify">
                     KSP School vzniklo v dielňach
                     <a href="https://www.ksp.sk/" class="text-blue-300 hover:text-blue-400 underline">
-                        Korešpondenčného semináru z programovania.
-                    </a>
+                        Korešpondenčného seminára z programovania.</a>
                     V KSP sa venujeme neformálnemu vzdelávaniu a popularizácii informatiky medzi žiakmi stredných škôl už od roku 1982.
                     V roku 2005 sme spustili náš prvý vzdelávací projekt - Programátorskú liaheň.
                     Novšia verzia Programátorskej liahne bola spustená v roku 2010.
@@ -72,47 +88,60 @@
                 </p>
             </div>
             <div class="w-full lg:w-1/2 flex items-center justify-center">
-                ??
+                {% include "pages/home_history.html" %}
             </div>
         </div>
     </div>
 
-{#    <div class="bg-gray-800 border-t border-b border-gray-600 text-gray-400 px-6 py-10 lg:py-16">#}
-{#        <h2 class="text-2xl font-bold text-white lg:text-4xl text-center">Povedali o nás</h2>#}
-{#        <div class="container mx-auto grid grid-cols-1 lg:grid-cols-3 mt-6 gap-2">#}
-{#            <blockquote class="bg-gray-700 border border-gray-600 rounded-md py-3 px-4  text-white">#}
-{#                <p class="text-xl">"masívne"</p>#}
-{##}
-{#                <div class="flex items-center mt-4 text-sm">#}
-{#                    <img src="https://i.pravatar.cc/64" class="rounded-full w-7 mr-2">#}
-{#                    <span class="font-medium">Jožko Mrkvička</span>, študent#}
-{#                </div>#}
-{#            </blockquote>#}
-{#            <blockquote class="bg-gray-700 border border-gray-600 rounded-md py-3 px-4  text-white">#}
-{#                <p class="text-xl">"menej masívne"</p>#}
-{##}
-{#                <div class="flex items-center mt-4 text-sm">#}
-{#                    <img src="https://i.pravatar.cc/64" class="rounded-full w-7 mr-2">#}
-{#                    <span class="font-medium">Jožko Mrkvička</span>, študent#}
-{#                </div>#}
-{#            </blockquote>#}
-{#            <blockquote class="bg-gray-700 border border-gray-600 rounded-md py-3 px-4  text-white">#}
-{#                <p class="text-xl">"slabo masívne"</p>#}
-{##}
-{#                <div class="flex items-center mt-4 text-sm">#}
-{#                    <img src="https://i.pravatar.cc/64" class="rounded-full w-7 mr-2">#}
-{#                    <span class="font-medium">Jožko Mrkvička</span>, študent#}
-{#                </div>#}
-{#            </blockquote>#}
-{#        </div>#}
-{#    </div>#}
+    <div class="text-gray-400 container mx-auto px-6 py-10 grid grid-cols-1 sm:grid-cols-4 text-sm gap-8">
+        <div class="sm:col-span-2">
+            <img src="https://raw.githubusercontent.com/trojsten/brand/master/trojsten/icon/white.svg" alt="Trojsten"
+                 class="h-10 mb-4">
+            <p>
+                KSP School a Korešpondenčný seminár z programovania zastrešuje občianske združenie <a
+                    href="https://trojsten.sk" class="underline text-gray-300 hover:text-gray-200">Trojsten</a>.
+            </p>
 
-    <div class="text-gray-400 container mx-auto px-6 py-10 w-full">
-        <p class="text-center w-full">
-            &copy; Korešpondenčný seminár z programovania, 2023.
-            <a href="https://github.com/trojsten/ksp-school" class="text-blue-300 hover:text-blue-400 underline">Je to opensource, urob si pull request.</a>
-        </p>
+            <p class="mt-1 text-xs">
+                <a href="https://github.com/trojsten/ksp-school" class="underline text-gray-300 hover:text-gray-200">Projekt
+                    je open-source.</a>
+            </p>
+        </div>
+        <div>
+            <div class="font-bold text-gray-100 mb-3">Kontakt</div>
+
+            <ul class="space-y-2">
+                <li>
+                    <a href="https://www.ksp.sk" class="hover:text-gray-300">ksp-info@ksp.sk</a>
+                </li>
+                <li>
+                    <p>Trojsten o.z.<br>
+                        FMFI UK, Mlynská dolina<br>
+                        842 48 Bratislava</p>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <div class="font-bold text-gray-100 mb-3">Ďalšie projekty</div>
+
+            <ul class="space-y-2">
+                <li>
+                    <a href="https://www.ksp.sk" class="hover:text-gray-300">Korešpondenčný seminár z programovania</a>
+                    <p class="text-xs text-gray-500">Programátorská súťaž pre stredoškolákov</p>
+                </li>
+                <li>
+                    <a href="https://prask.ksp.sk" class="hover:text-gray-300">PRASK</a>
+                    <p class="text-xs text-gray-500">Programátorská súťaž pre základoškolákov</p>
+                </li>
+                <li>
+                    <a href="https://fks.sk" class="hover:text-gray-300">Fyzikálny korešpondenčný seminár</a>
+                    <p class="text-xs text-gray-500">Fyzikálna súťaž pre stredoškolákov</p>
+                </li>
+                <li>
+                    <a href="https://kms.sk" class="hover:text-gray-300">Korešpondenčný matematický seminár</a>
+                    <p class="text-xs text-gray-500">Matematická súťaž pre stredoškolákov</p>
+                </li>
+            </ul>
+        </div>
     </div>
-
-
 {% endblock %}

@@ -20,11 +20,7 @@ class CoursesListView(ListView):
     template_name = "courses/list.html"
 
     def get_queryset(self):
-        return (
-            CourseGroup.objects.order_by("order")
-            .prefetch_related("courses")
-            .all()
-        )
+        return CourseGroup.objects.order_by("order").prefetch_related("courses").all()
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
@@ -51,7 +47,14 @@ class CourseView(DetailView):
             layers.append(list(layer_lessons))
 
         ctx["layers"] = layers
-        ctx["done"] = all(all(lesson.tracker is not None and lesson.tracker.state == TrackerState.COMPLETE for lesson in layer) for layer in layers)
+        ctx["done"] = all(
+            all(
+                lesson.tracker is not None
+                and lesson.tracker.state == TrackerState.COMPLETE
+                for lesson in layer
+            )
+            for layer in layers
+        )
         return ctx
 
 

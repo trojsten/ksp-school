@@ -19,6 +19,27 @@
         </div>
     </div>
 
+    {% if done %}
+        <div class="container mx-auto mb-10 lg:mb-20 p-8 lg:items-center gap-2 lg:gap-6 text-white bg-green-800 border border-green-600 rounded-md">
+            <p class="font-bold">
+                🎉 Gratulujeme, úspešne si dokončil tento kurz!
+            </p>
+
+            {% with course.recommended_courses.all as next %}
+            {% if next|length %}
+                <p class="mt-2">
+                    Asi sa pýtaš, čo ďalej, a my to vieme. Môžeš pokračovať týmito kurzami:
+                </p>
+                <ul class="list-inside list-disc mt-2 ml-4">
+                {% for course in next %}
+                    <li><a href="{% url 'course_detail' course.slug %}" class="text-blue-300 hover:text-blue-400 underline">{{ course }}</a></li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            {% endwith %}
+        </div>
+    {% endif %}
+
     <div class="container mx-auto px-6">
         <div class="flex flex-col md:flex-row text-white items-center overflow-x-auto gap-4">
             {% for layer in layers %}
@@ -55,19 +76,5 @@
             {% endfor %}
         </div>
     </div>
-
-    {% if done %}
-        <div class="container mx-auto flex flex-col lg:flex-row py-10 lg:py-20 px-6 lg:items-center gap-2 lg:gap-6 text-white">
-                Gratulujeme, dokončil si tento kurz :partyparrot:
-                {% if course.recommended_courses.all.count %}
-                    Asi sa pýtaš, čo ďalej, a my to vieme. Môžeš pokračovať týmito kurzami:
-                    <ul>
-                    {% for course in course.recommended_courses.all %}
-                        <li><a href="{% url 'course_detail' course.slug %}">{{ course }}</a></li>
-                    {% endfor %}
-                    </ul>
-                {% endif %}
-        </div>
-    {% endif %}
 
 {% endblock %}

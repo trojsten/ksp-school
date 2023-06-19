@@ -63,18 +63,25 @@
     {% django_htmx_script %}
 
     <script>
-        tippy('[data-tippy-content]')
-        feather.replace()
+        (() => {
+            const onLoad = () => {
+                tippy('[data-tippy-content]')
+                feather.replace()
 
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-              delimiters: [
-                  {left: '$$', right: '$$', display: true},
-                  {left: '$', right: '$', display: false},
-                  {left: '\\(', right: '\\)', display: false},
-                  {left: '\\[', right: '\\]', display: true}
-              ]
+                renderMathInElement(document.body, {
+                  delimiters: [
+                      {left: '$$', right: '$$', display: true},
+                      {left: '$', right: '$', display: false},
+                      {left: '\\(', right: '\\)', display: false},
+                      {left: '\\[', right: '\\]', display: true}
+                  ]
+                })
+            }
+
+            document.addEventListener("DOMContentLoaded", () => {
+                onLoad()
+                htmx.onLoad(onLoad)
             })
-        })
+        })()
     </script>
 </body>

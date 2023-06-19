@@ -13,7 +13,9 @@ class Problem(models.Model):
 
     name = models.CharField(verbose_name="názov", max_length=64)
     content = models.TextField(verbose_name="zadanie", blank=True)
-    testovac_id = models.CharField(verbose_name="ID úlohy pre testovač", max_length=128)
+    testovac_id = models.CharField(
+        verbose_name="ID úlohy pre testovač", max_length=128, unique=True
+    )
 
     def __str__(self):
         return self.name

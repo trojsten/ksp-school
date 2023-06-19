@@ -1,0 +1,19 @@
+{% load submits %}
+
+{% if submit.protocol %}
+    {% thermometers submit %}
+{% else %}
+    {# TODO: Better empty state. #}
+    {% if not request.htmx %}
+    <div hx-get="{% url "submit_protocol" problem=submit.problem.testovac_id submit=submit.id %}" hx-trigger="every 5s">
+    {% endif %}
+        <div class="w-full rounded-md px-4 py-3 bg-gray-700 border border-gray-600 text-white">
+            <p>Tvoj program čaká na otestovanie...</p>
+            <p class="text-sm mt-1 text-gray-300">
+                Výsledky testov sa zobrazia po skončení testovania.
+            </p>
+        </div>
+    {% if not request.htmx %}
+    </div>
+    {% endif %}
+{% endif %}

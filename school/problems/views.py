@@ -8,7 +8,8 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import DetailView, FormView
+from django.views.generic import DetailView, FormView, TemplateView
+from django_htmx.http import HTMX_STOP_POLLING
 from judge_client.client import JudgeConnectionError
 
 from school.courses.models import LessonItem
@@ -61,6 +62,25 @@ class SubmitDetailView(LoginRequiredMixin, DetailView):
             }
         )
         return ctx
+
+
+class SubmitProtocolView(LoginRequiredMixin, DetailView):
+    template_name = "problems/_protocol.html"
+    pk_url_kwarg = "submit"
+
+    def get_queryset(self):
+        # TODO: Permissions
+        return Submit.objects.filter(
+            user=self.request.user, problem__testovac_id=self.kwargs["problem"]
+        )
+
+    def get(self, request, *args, **kwargs):
+        resp = super().get(request, *args, **kwargs)
+
+        submit = self.get_object()
+        if submit.protocol:
+            resp.status_code = HTMX_STOP_POLLING
+        return resp
 
 
 class SubmitCreateView(LoginRequiredMixin, FormView):

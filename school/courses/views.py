@@ -3,6 +3,7 @@ from itertools import groupby
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404, HttpResponseNotFound
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views import View
 from django.views.generic import DetailView, ListView, TemplateView
 
 from school.courses.models import Course, CourseGroup, Lesson, LessonItem
@@ -104,17 +105,17 @@ class LessonView(TemplateView):
             )
 
         # Tracking:
-        tracker = None
+        tracker, item_tracker = None, None
         if self.request.user.is_authenticated:
-            if self.item.lesson_material:
-                _, tracker, _ = mark_completed(self.item, self.request.user)
-            else:
-                _, tracker, _ = get_or_create_trackers(self.item, self.request.user)
+            item_tracker, tracker, _ = get_or_create_trackers(
+                self.item, self.request.user
+            )
 
         ctx.update(
             {
                 "lesson": self.lesson,
                 "tracker": tracker,
+                "item_tracker": item_tracker,
                 "item": self.item,
                 "items": get_items_with_trackers(items, self.request.user),
                 "submits": submits,
@@ -123,3 +124,27 @@ class LessonView(TemplateView):
             }
         )
         return ctx
+
+
+class CompleteLessonView(View, LoginRequiredMixin):
+    http_method_names = ["post"]
+
+    def post(self, request, *args, **kwargs):
+        lesson = get_object_or_404(
+            Lesson,
+            slug=kwargs["lesson"],
+            course__slug=kwargs["course"],
+        )
+
+        item: LessonItem = get_object_or_404(lesson.lessonitem_set, slug=kwargs["item"])
+
+        if self.request.user.is_authenticated:
+            if item.lesson_material:
+                _, tracker, _ = mark_completed(item, self.request.user)
+
+        return redirect(
+            "lesson",
+            course=kwargs["course"],
+            lesson=lesson.slug,
+            item=item.slug,
+        )

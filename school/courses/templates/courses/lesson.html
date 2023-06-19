@@ -52,9 +52,27 @@
         <div class="grow px-6 py-8">
             <div class="mx-auto prose prose-invert">
                 {% if item.lesson_material %}
-                {{ item.lesson_material.content|markdownify }}
+                    {% if user.is_authenticated %}
+                        <div class="text-right">
+                            <form action="{% url 'complete_lesson' course lesson.slug item.slug %}" method="post">
+                                {% csrf_token %}
+                                <label><input type="checkbox" onclick="submit()" {% if item_tracker.state == tracker.state.COMPLETE %}checked{% endif %}> Označiť ako dokončené</label>
+                            </form>
+                        </div>
+                    {% endif %}
+
+                    {{ item.lesson_material.content|markdownify }}
+
+                    {% if user.is_authenticated %}
+                        <div class="text-right">
+                            <form action="{% url 'complete_lesson' course lesson.slug item.slug %}" method="post">
+                                {% csrf_token %}
+                                <label><input type="checkbox" onclick="submit()" {% if item_tracker.state == tracker.state.COMPLETE %}checked{% endif %}> Označiť ako dokončené</label>
+                            </form>
+                        </div>
+                    {% endif %}
                 {% elif item.problem %}
-                {{ item.problem.content|markdownify }}
+                    {{ item.problem.content|markdownify }}
                 {% endif %}
             </div>
 

@@ -47,6 +47,32 @@ def mark_completed(
 
     # We only update the tracker if it was not completed before,
     if item_tracker.completed_at is not None:
+        item_tracker.completed_at = None
+        item_tracker.save()
+
+        old_state = lesson_tracker.state
+        lesson_tracker.completed -= 1
+        new_state = lesson_tracker.state
+
+        # LessonTracker state did not change.
+        if old_state == new_state:
+            lesson_tracker.save()
+            return item_tracker, lesson_tracker, course_tracker
+
+        # We have uncompleted the Lesson (COMPLETE -> STARTEDx  )
+        if old_state == TrackerState.COMPLETE:
+            lesson_tracker.completed_at = None
+
+        # It was not tracked in CourseTracker before (COMPLETE -> STARTED)
+        if new_state == TrackerState.STARTED and old_state == TrackerState.COMPLETE:
+            if course_tracker.state == TrackerState.COMPLETE:
+                course_tracker.completed_at = None
+
+            course_tracker.completed -= 1
+
+            course_tracker.save()
+
+        lesson_tracker.save()
         return item_tracker, lesson_tracker, course_tracker
 
     item_tracker.completed_at = timezone.now()

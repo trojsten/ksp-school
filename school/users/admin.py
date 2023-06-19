@@ -4,5 +4,5 @@ from django.contrib.auth.decorators import login_required
 
 from school.users.models import User
 
-admin.site.login = login_required(admin.site.login)
+# admin.site.login = login_required(admin.site.login)
 admin.site.register(User, UserAdmin)

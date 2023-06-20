@@ -15,7 +15,8 @@ CMD ["npm", "run", "dev"]
 # Django container
 FROM python:3.11-slim-bullseye AS base
 WORKDIR /app
-RUN useradd --create-home appuser
+RUN useradd --create-home appuser \
+    && chmod 777 /app
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -27,6 +28,6 @@ RUN pip install --upgrade pipenv
 COPY Pipfile Pipfile.lock ./
 RUN pipenv install --system --deploy
 
-COPY . /app/
+COPY --chown=appuser:appuser . /app/
 COPY --from=frontend-build /app/school/static/app.css /app/school/static/app.css
 CMD ["/app/entrypoint.sh"]

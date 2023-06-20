@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "school.trackers",
     "school.imports",
     "django_htmx",
+    "django_probes",
 ]
 
 MIDDLEWARE = [
@@ -106,7 +107,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = "/static/"
-STATIC_ROOT = "/app/static/"
+STATIC_ROOT = BASE_DIR / "static"
 STATICFILES_DIRS = [BASE_DIR / "school" / "static"]
 
 DEFAULT_FILE_STORAGE = "school.storages.OverwriteFileSystemStorage"

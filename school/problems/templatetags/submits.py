@@ -2,7 +2,6 @@ from itertools import groupby
 from typing import List
 
 from django import template
-from django.urls import reverse
 from judge_client.client import ProtocolTest
 
 from school.problems.models import Submit

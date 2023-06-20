@@ -8,7 +8,7 @@
             {% if test.result == "OK" %}
             <div class="bg-green-600 w-12 h-12 flex items-center justify-center rounded-md" data-tippy-content="OK ({{ test.time }} ms)"><i data-feather="check" class="w-5"></i></div>
             {% elif test.result == "WA" %}
-            <div class="bg-red-600 w-12 h-12 flex items-center justify-center rounded-md" data-tippy-content="Zlá odpoveď ({{ test.time }} ms)"><i data-feather="x" class="w-5"></i></div>
+            <a class="bg-red-600 w-12 h-12 flex items-center justify-center rounded-md" data-tippy-content="Zlá odpoveď ({{ test.time }} ms)" href="#{{ test.name }}"><i data-feather="x" class="w-5"></i></a>
             {% elif test.result == "TLE" %}
             <div class="bg-orange-500 w-12 h-12 flex items-center justify-center rounded-md" data-tippy-content="Časový limit vypršal ({{ test.time }} ms)"><i data-feather="clock" class="w-5"></i></div>
             {% elif test.result == "EXC" %}
@@ -22,3 +22,19 @@
     </div>
 </div>
 {% endfor %}
+
+
+<div class="text-white mt-6 space-y-4">
+{% for test in protocol.tests %}
+    {% if test.details %}
+        <div id="{{ test.name }}">
+            <div class="text-sm text-gray-300 mb-1">
+                Výsledok pre <code>{{ test.name }}</code>:
+            </div>
+            <div class="bg-black p-3 rounded-md">
+                <pre>{{ test.details }}</pre>
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}
+</div>

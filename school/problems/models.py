@@ -13,6 +13,9 @@ class Problem(models.Model):
 
     name = models.CharField(verbose_name="názov", max_length=64)
     content = models.TextField(verbose_name="zadanie", blank=True)
+    detail_visible = models.BooleanField(
+        verbose_name="viditeľnosť detailov testovania", default=False
+    )
     testovac_id = models.CharField(
         verbose_name="ID úlohy pre testovač", max_length=128, unique=True
     )

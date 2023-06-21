@@ -4,7 +4,7 @@
 <div class="flex gap-1 mt-1 text-white">
     <div class="bg-gray-800 w-12 h-12 flex flex-none items-center justify-center rounded-md text-xs">{{ batch.score }}%</div>
     <div class="flex gap-1 flex-wrap">
-        {% for test in batch.tests %}
+        {% for test, _ in batch.tests %}
             {% if test.result == "OK" %}
             <div class="bg-green-600 w-12 h-12 flex items-center justify-center rounded-md" data-tippy-content="OK ({{ test.time }} ms)"><i data-feather="check" class="w-5"></i></div>
             {% elif test.result == "WA" %}
@@ -25,16 +25,18 @@
 
 
 <div class="text-white mt-6 space-y-4">
-{% for test in protocol.tests %}
-    {% if test.details %}
-        <div id="{{ test.name }}">
-            <div class="text-sm text-gray-300 mb-1">
-                Výsledok pre <code>{{ test.name }}</code>:
+{% for batch in batches %}
+    {% for test, visible in batch.tests %}
+        {% if test.details and visible %}
+            <div id="{{ test.name }}">
+                <div class="text-sm text-gray-300 mb-1">
+                    Výsledok pre <code>{{ test.name }}</code>:
+                </div>
+                <div class="bg-black p-3 rounded-md">
+                    <pre>{{ test.details }}</pre>
+                </div>
             </div>
-            <div class="bg-black p-3 rounded-md">
-                <pre>{{ test.details }}</pre>
-            </div>
-        </div>
-    {% endif %}
+        {% endif %}
+    {% endfor %}
 {% endfor %}
 </div>

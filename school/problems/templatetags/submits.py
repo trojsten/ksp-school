@@ -25,12 +25,15 @@ def thermometers(submit: Submit):
 
     for _, tests in batch_tests:
         tests = list(tests)
+        detail_visible = [
+            submit.problem.detail_visible or "sample" in test.name for test in tests
+        ]
         batches.append(
             {
                 "score": 100
                 * len(list(filter(lambda x: x.result == "OK", tests)))
                 // len(tests),
-                "tests": tests,
+                "tests": list(zip(tests, detail_visible)),
             }
         )
 

@@ -20,6 +20,7 @@ class ImportProblemsView(ImportView):
                 defaults={
                     "name": meta.get("name", "???"),
                     "content": body,
+                    "detail_visible": meta.get("detail_visible", False),
                 },
             ),
         )

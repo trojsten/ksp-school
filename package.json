@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "tailwindcss -i ./css/tailwind.css -o ./school/static/app.css --watch",
-    "build": "tailwindcss -i ./css/tailwind.css -o ./school/static/app.css --minify"
+    "build": "tailwindcss -i ./css/tailwind.css -o ./school/static/app.css --minify",
+    "build-js": "esbuild school/bundle.js --bundle --minify --outfile=./school/static/bundle.js"
   },
   "author": "",
   "license": "ISC",
@@ -14,6 +15,12 @@
     "tailwindcss": "^3.3.2"
   },
   "dependencies": {
-    "@tailwindcss/forms": "^0.5.3"
+    "@tailwindcss/forms": "^0.5.3",
+    "alpinejs": "^3.12.2",
+    "esbuild": "^0.18.10",
+    "feather-icons": "^4.29.0",
+    "htmx.org": "^1.9.2",
+    "iconify-icon": "^1.0.8",
+    "tippy.js": "^6.3.7"
   }
 }

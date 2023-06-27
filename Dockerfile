@@ -9,7 +9,7 @@ RUN npm install
 COPY school ./school
 COPY css ./css
 COPY tailwind.config.js ./tailwind.config.js
-RUN npm run build
+RUN npm run build && npm run build-js
 CMD ["npm", "run", "dev"]
 
 # Django container
@@ -29,5 +29,5 @@ COPY Pipfile Pipfile.lock ./
 RUN pipenv install --system --deploy
 
 COPY --chown=appuser:appuser . /app/
-COPY --from=frontend-build /app/school/static/app.css /app/school/static/app.css
+COPY --from=frontend-build /app/school/static/app.css /app/school/static/bundle.css /app/school/static/bundle.js /app/school/static/
 CMD ["/app/entrypoint.sh"]

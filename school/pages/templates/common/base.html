@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'app.css' %}">
     <link rel="stylesheet" href="{% static 'code.css' %}">
+    <link rel="stylesheet" href="{% static 'bundle.css' %}">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% block meta %}{% endblock %}
@@ -52,41 +53,13 @@
 
     {% block body %}{% endblock %}
 
-    <script src="https://unpkg.com/feather-icons"></script>
-    <script src="https://unpkg.com/@popperjs/core@2"></script>
-    <script src="https://unpkg.com/tippy.js@6"></script>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous"></script>
-    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
-    <script defer src="{% static "vendor/htmx.min.js" %}"></script>
+    <script src="{% static "bundle.js" %}"></script>
     {% django_htmx_script %}
 
     {% if not debug %}
     <script defer data-domain="school.ksp.sk" src="https://analytics.trojsten.sk/js/script.js"></script>
     {% endif %}
-
-    <script>
-        (() => {
-            const onLoad = () => {
-                tippy('[data-tippy-content]')
-                feather.replace()
-
-                renderMathInElement(document.body, {
-                  delimiters: [
-                      {left: '$$', right: '$$', display: true},
-                      {left: '$', right: '$', display: false},
-                      {left: '\\(', right: '\\)', display: false},
-                      {left: '\\[', right: '\\]', display: true}
-                  ]
-                })
-            }
-
-            document.addEventListener("DOMContentLoaded", () => {
-                onLoad()
-                htmx.onLoad(onLoad)
-            })
-        })()
-    </script>
 </body>

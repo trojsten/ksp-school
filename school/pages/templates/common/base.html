@@ -63,6 +63,10 @@
     <script defer src="{% static "vendor/htmx.min.js" %}"></script>
     {% django_htmx_script %}
 
+    {% if not debug %}
+    <script defer data-domain="school.ksp.sk" src="https://analytics.trojsten.sk/js/script.js"></script>
+    {% endif %}
+
     <script>
         (() => {
             const onLoad = () => {

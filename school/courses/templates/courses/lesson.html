@@ -17,8 +17,8 @@
                 {% endif %}
 
                 <div class="text-white w-full">
-                    <a href="{% url 'course_detail' lesson.course.slug %}" class="font-medium text-gray-300 text-base flex w-full items-center">{{ lesson.course.name }} <span class="ml-auto text-xs">Späť na kurz</span></a>
-                    <div class="font-bold text-xl lg:text-2xl">{{ lesson.name }}</div>
+                    <a href="{% url 'course_detail' lesson.course.slug %}" class="font-medium text-gray-300 text-base flex w-full items-center">{{ lesson.course.name|markdownify }} <span class="ml-auto text-xs">Späť na kurz</span></a>
+                    <div class="font-bold text-xl lg:text-2xl">{{ lesson.name|markdownify }}</div>
                 </div>
             </div>
 
@@ -37,7 +37,7 @@
                         <a href="{% url 'lesson' lesson.course.slug lesson.slug it.item.slug %}" class="flex gap-1.5 items-center {% if item == it.item %}text-white font-bold{% endif %}">
                             <i data-feather="{% if it.item.problem %}code{% else %}file-text{% endif %}" class="w-4 h-4 shrink-0"></i>
 
-                            {{ it.item.name }}
+                            {{ it.item.name|markdownify }}
 
                             {% if it.tracker and it.tracker.state == it.tracker.state.COMPLETE %}
                                 <i data-feather="check" class="ml-auto w-4 h-4 text-green-500 shrink-0"></i>

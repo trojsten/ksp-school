@@ -13,4 +13,7 @@ push = true
 "pyproject.toml" = [
     'current_version = "{version}"',
 ]
+"schools/__init__.py" = [
+    'VERSION = "{version}"',
+]
 

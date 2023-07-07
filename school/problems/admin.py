@@ -1,10 +1,15 @@
 from django.contrib import admin
 
-from school.problems.models import Problem, Submit
+from school.problems.models import Problem, Submit, Tag
 
 
 @admin.register(Problem)
 class ProblemAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
     pass
 
 

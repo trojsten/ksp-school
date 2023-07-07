@@ -72,6 +72,14 @@
                         </div>
                     {% endif %}
                 {% elif item.problem %}
+                    <div class="mb-10">
+                        <b>Tagy: </b>
+                        {% for tag in item.problem.tags.all %}
+                            <span class="bg-blue-900 rounded-md p-2 m-1">
+                                {{ tag }}
+                            </span>
+                        {% endfor %}
+                    </div>
                     {{ item.problem.content|markdownify }}
                 {% endif %}
             </div>

@@ -1,12 +1,29 @@
+import sys
+
 from django.http import JsonResponse
 
 from school.imports.forms import ZipImportForm
 from school.imports.views import ImportView, _import_markdowns
-from school.problems.models import Problem
+from school.problems.models import Problem, Tag
 
 
 class ImportProblemsView(ImportView):
     def post(self, request, *args, **kwargs):
+        def import_problems(name, meta, body):
+            problem, _ = Problem.objects.update_or_create(
+                testovac_id=name,
+                defaults={
+                    "name": meta.get("name", "???"),
+                    "content": body,
+                    "detail_visible": meta.get("detail_visible", False),
+                },
+            )
+
+            problem.tags.clear()
+
+            for tag in meta.get("tags", []):
+                problem.tags.add(Tag.objects.update_or_create(name=tag)[0])
+
         form = ZipImportForm(request.POST, request.FILES)
 
         if not form.is_valid():
@@ -15,14 +32,7 @@ class ImportProblemsView(ImportView):
 
         ids = _import_markdowns(
             form.cleaned_data["file"],
-            lambda name, meta, body: Problem.objects.update_or_create(
-                testovac_id=name,
-                defaults={
-                    "name": meta.get("name", "???"),
-                    "content": body,
-                    "detail_visible": meta.get("detail_visible", False),
-                },
-            ),
+            import_problems,
         )
 
         orphans = list(

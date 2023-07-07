@@ -6,6 +6,17 @@ from school.problems import constants
 from school.problems.services import get_judge_client
 
 
+class Tag(models.Model):
+    class Meta:
+        verbose_name = "tag"
+        verbose_name_plural = "tagy"
+
+    name = models.CharField(verbose_name="názov", max_length=256)
+
+    def __str__(self):
+        return self.name
+
+
 class Problem(models.Model):
     class Meta:
         verbose_name = "úloha"
@@ -19,6 +30,7 @@ class Problem(models.Model):
     testovac_id = models.CharField(
         verbose_name="ID úlohy pre testovač", max_length=128, unique=True
     )
+    tags = models.ManyToManyField(Tag)
 
     def __str__(self):
         return self.name

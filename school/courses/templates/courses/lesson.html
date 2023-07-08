@@ -72,13 +72,31 @@
                         </div>
                     {% endif %}
                 {% elif item.problem %}
-                    <div class="mb-10">
+                    <div class="mb-5">
                         <b>Tagy: </b>
                         {% for tag in item.problem.tags.all %}
                             <span class="bg-blue-900 rounded-md p-2 m-1">
                                 {{ tag }}
                             </span>
                         {% endfor %}
+                    </div>
+                    <div class="mb-5">
+                        {% if item.problem.difficulty == item.problem.ProblemDifficulty.EASY %}
+                            <b>Obtiažnosť:</b>
+                            <span class="bg-green-900 rounded-md p-2 m-1">
+                                easy
+                            </span>
+                        {% elif item.problem.difficulty == item.problem.ProblemDifficulty.MEDIUM %}
+                            <b>Obtiažnosť:</b>
+                            <span class="bg-orange-900 rounded-md p-2 m-1">
+                                medium
+                            </span>
+                        {% elif item.problem.difficulty == item.problem.ProblemDifficulty.HARD %}
+                            <b>Obtiažnosť:</b>
+                            <span class="bg-red-900 rounded-md p-2 m-1">
+                                hard
+                            </span>
+                        {% endif %}
                     </div>
                     {{ item.problem.content|markdownify }}
                 {% endif %}

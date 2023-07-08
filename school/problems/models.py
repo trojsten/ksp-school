@@ -1,3 +1,5 @@
+import dataclasses
+
 from django.conf import settings
 from django.db import models
 from judge_client.client import Protocol
@@ -18,12 +20,23 @@ class Tag(models.Model):
 
 
 class Problem(models.Model):
+    class ProblemDifficulty(models.TextChoices):
+        EASY = "easy", "easy"
+        MEDIUM = "medium", "medium"
+        HARD = "hard", "hard"
+        UNKNOWN = "unknown", "unknown"
+
     class Meta:
         verbose_name = "úloha"
         verbose_name_plural = "úlohy"
 
     name = models.CharField(verbose_name="názov", max_length=64)
     content = models.TextField(verbose_name="zadanie", blank=True)
+    difficulty = models.CharField(
+        verbose_name="obtiažnosť",
+        choices=ProblemDifficulty.choices,
+        default=ProblemDifficulty.UNKNOWN,
+    )
     detail_visible = models.BooleanField(
         verbose_name="viditeľnosť detailov testovania", default=False
     )

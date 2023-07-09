@@ -2,7 +2,7 @@
 profile = "black"
 
 [tool.bumpver]
-current_version = "2023.4"
+current_version = "2023.5"
 version_pattern = "YYYY.PATCH"
 commit_message = "bump version {old_version} -> {new_version}"
 commit = true
@@ -13,7 +13,7 @@ push = true
 "pyproject.toml" = [
     'current_version = "{version}"',
 ]
-"schools/__init__.py" = [
+"school/__init__.py" = [
     'VERSION = "{version}"',
 ]
 

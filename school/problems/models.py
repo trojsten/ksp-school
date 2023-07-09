@@ -1,3 +1,5 @@
+import dataclasses
+
 from django.conf import settings
 from django.db import models
 from judge_client.client import Protocol
@@ -6,19 +8,42 @@ from school.problems import constants
 from school.problems.services import get_judge_client
 
 
+class Tag(models.Model):
+    class Meta:
+        verbose_name = "tag"
+        verbose_name_plural = "tagy"
+
+    name = models.CharField(verbose_name="názov", max_length=256)
+
+    def __str__(self):
+        return self.name
+
+
 class Problem(models.Model):
+    class ProblemDifficulty(models.TextChoices):
+        EASY = "easy", "easy"
+        MEDIUM = "medium", "medium"
+        HARD = "hard", "hard"
+        UNKNOWN = "unknown", "unknown"
+
     class Meta:
         verbose_name = "úloha"
         verbose_name_plural = "úlohy"
 
     name = models.CharField(verbose_name="názov", max_length=64)
     content = models.TextField(verbose_name="zadanie", blank=True)
+    difficulty = models.CharField(
+        verbose_name="obtiažnosť",
+        choices=ProblemDifficulty.choices,
+        default=ProblemDifficulty.UNKNOWN,
+    )
     detail_visible = models.BooleanField(
         verbose_name="viditeľnosť detailov testovania", default=False
     )
     testovac_id = models.CharField(
         verbose_name="ID úlohy pre testovač", max_length=128, unique=True
     )
+    tags = models.ManyToManyField(Tag)
 
     def __str__(self):
         return self.name

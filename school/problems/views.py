@@ -23,10 +23,10 @@ class SubmitDetailView(LoginRequiredMixin, DetailView):
     pk_url_kwarg = "submit"
 
     def get_queryset(self):
-        # TODO: Permissions
-        return Submit.objects.filter(
-            user=self.request.user, problem__testovac_id=self.kwargs["problem"]
-        )
+        qs = Submit.objects.filter(problem__testovac_id=self.kwargs["problem"])
+        if not self.request.user.is_staff:
+            qs = qs.filter(user=self.request.user)
+        return qs
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
@@ -69,10 +69,10 @@ class SubmitProtocolView(LoginRequiredMixin, DetailView):
     pk_url_kwarg = "submit"
 
     def get_queryset(self):
-        # TODO: Permissions
-        return Submit.objects.filter(
-            user=self.request.user, problem__testovac_id=self.kwargs["problem"]
-        )
+        qs = Submit.objects.filter(problem__testovac_id=self.kwargs["problem"])
+        if not self.request.user.is_staff:
+            qs = qs.filter(user=self.request.user)
+        return qs
 
     def get(self, request, *args, **kwargs):
         resp = super().get(request, *args, **kwargs)

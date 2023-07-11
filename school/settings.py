@@ -24,12 +24,15 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "mozilla_django_oidc",
+    #
     "school.users",
     "school.pages",
     "school.courses",
     "school.problems",
     "school.trackers",
     "school.imports",
+    "school.classrooms",
+    #
     "django_htmx",
     "django_probes",
     "widget_tweaks",

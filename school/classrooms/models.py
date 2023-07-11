@@ -1,10 +1,22 @@
 from django.db import models
 
 
+class ClassroomQuerySet(models.QuerySet):
+    def for_user(self, user, teacher_required=False):
+        if user.is_superuser:
+            return self
+        qs = self.filter(classroomuser__user=user)
+        if teacher_required:
+            qs = qs.filter(classroomuser__is_teacher=True)
+        return qs
+
+
 class Classroom(models.Model):
     name = models.CharField(max_length=100)
     join_code = models.CharField(max_length=8, blank=True, null=True, unique=True)
     is_public = models.BooleanField(default=False)
+
+    objects = ClassroomQuerySet.as_manager()
 
     class Meta:
         ordering = ["name"]

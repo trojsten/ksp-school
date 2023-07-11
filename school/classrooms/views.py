@@ -1,6 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView
+from django.shortcuts import redirect
+from django.views.generic import FormView, TemplateView
 
+from school.classrooms.forms import JoinForm
 from school.classrooms.models import Classroom, ClassroomUser
 
 
@@ -20,3 +22,14 @@ class ClassroomListView(LoginRequiredMixin, TemplateView):
         )
 
         return ctx
+
+
+class ClassroomJoinView(LoginRequiredMixin, FormView):
+    template_name = "classrooms/join.html"
+    form_class = JoinForm
+
+    def form_valid(self, form):
+        classroom = form.cleaned_data["classroom"]
+        ClassroomUser.objects.create(user=self.request.user, classroom=classroom)
+
+        return redirect("classrooms_list")  # TODO: classroom detail

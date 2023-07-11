@@ -5,6 +5,13 @@
 {% block body %}
     <div class="container mx-auto py-10 lg:py-16 px-6">
         <h1 class="tracking-tight text-3xl text-white font-bold lg:text-5xl">Zoznam tried</h1>
+
+        <p class="mt-6">
+            <a href="{% url "classrooms_join" %}" class="btn">
+                <iconify-icon icon="fe:plus"></iconify-icon>
+                Pridať sa do triedy
+            </a>
+        </p>
     </div>
 
     {% if mine %}

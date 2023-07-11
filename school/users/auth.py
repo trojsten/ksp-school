@@ -4,6 +4,10 @@ from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 from school.users.models import User
 
 
+def logout_url(request):
+    return "https://id.trojsten.sk/oauth/logout"
+
+
 class TrojstenOIDCAB(OIDCAuthenticationBackend):
     def filter_users_by_claims(self, claims):
         email = claims.get("email")

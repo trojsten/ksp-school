@@ -76,6 +76,11 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
 ]
 
+
+def oidc_logout():
+    return "https://id.trojsten.sk/oauth/logout"
+
+
 OIDC_OP_JWKS_ENDPOINT = env(
     "OIDC_OP_JWKS_ENDPOINT",
     default="https://id.trojsten.sk/oauth/.well-known/jwks.json",
@@ -93,6 +98,7 @@ OIDC_RP_SCOPES = "openid email profile"
 OIDC_RP_SIGN_ALGO = "RS256"
 OIDC_RP_CLIENT_ID = env("OIDC_RP_CLIENT_ID")
 OIDC_RP_CLIENT_SECRET = env("OIDC_RP_CLIENT_SECRET")
+OIDC_OP_LOGOUT_URL_METHOD = oidc_logout()
 ALLOW_LOGOUT_GET_METHOD = True
 
 LOGIN_URL = "oidc_authentication_init"

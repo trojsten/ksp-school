@@ -6,6 +6,7 @@ TESTOVAC_MESSAGES = {
     "MLE": "Prekročený limit pamäte",
     "OK": "OK",
     "CONNERR": "Chyba testovača",
+    "CERR": "Chyba počas kompilácie",
 }
 
 TESTOVAC_COLORS = {
@@ -14,6 +15,7 @@ TESTOVAC_COLORS = {
     "TLE": "orange",
     "EXC": "orange",
     "MLE": "orange",
+    "CERR": "orange",
     "OK": "green",
     "CONNERR": "gray",
 }

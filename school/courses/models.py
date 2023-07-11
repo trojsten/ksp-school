@@ -97,6 +97,9 @@ class LessonItem(models.Model):
         "problems.Problem", on_delete=models.CASCADE, blank=True, null=True
     )
 
+    def __str__(self):
+        return self.name
+
     @property
     def name(self):
         if self.lesson_material:

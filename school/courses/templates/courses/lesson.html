@@ -105,8 +105,16 @@
             {% if item.problem %}
                 <div class="max-w-prose mx-auto my-6">
                     {% if user.is_authenticated %}
+
                         <h2 class="text-white font-bold text-2xl mb-4">Odovzávanie programu</h2>
                         {% submit_form item.problem lesson_item_id=item.id %}
+
+                        {% if user.is_staff %}
+                            <a href="{% url 'admin:problems_submit_changelist' %}?problem__testovac_id={{ item.problem.testovac_id }}" class="btn mt-10">
+                                <i data-feather="list" class="h-4"></i>
+                                Zobraz všetky submity
+                            </a>
+                        {% endif %}
 
                         {% if submits %}
                         <h2 class="text-white font-bold text-2xl mt-10 mb-4">Posledné submity</h2>

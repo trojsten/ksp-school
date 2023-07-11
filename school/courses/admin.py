@@ -31,4 +31,5 @@ class LessonAdmin(admin.ModelAdmin):
 
 @admin.register(LessonMaterial)
 class LessonMaterialAdmin(admin.ModelAdmin):
-    pass
+    list_display = ["name", "material_id"]
+    search_fields = ["name", "material_id"]

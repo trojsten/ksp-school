@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "school.imports",
     "django_htmx",
     "django_probes",
+    "widget_tweaks",
 ]
 
 MIDDLEWARE = [

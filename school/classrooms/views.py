@@ -79,7 +79,6 @@ class ClassroomResultsView(LoginRequiredMixin, TeacherRequiredMixin, DetailView)
                 classroom=self.object, is_teacher=False
             ).values("user")
         )
-        print(students)
         return get_course_results(self.course, students)
 
     def get_context_data(self, **kwargs):

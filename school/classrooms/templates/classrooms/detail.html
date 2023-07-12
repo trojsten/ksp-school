@@ -8,7 +8,7 @@
 
         {% if is_teacher %}
         <div class="mt-6">
-            <a href="#" class="btn">
+            <a href="{% url "classrooms_results" pk=classroom.id %}" class="btn">
                 <iconify-icon icon="fe:line-chart" class="text-xl mr-1"></iconify-icon> Výsledky študentov
             </a>
         </div>

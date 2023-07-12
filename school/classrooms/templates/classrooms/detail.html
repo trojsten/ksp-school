@@ -1,0 +1,21 @@
+{% extends 'common/base.html' %}
+
+{% block title %}{{ classroom.name }} {{ block.super }}{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto py-10 lg:py-16 px-6">
+        <h1 class="tracking-tight text-3xl text-white font-bold lg:text-5xl">{{ classroom.name }}</h1>
+
+        {% if is_teacher %}
+        <div class="mt-6">
+            <a href="{% url "classrooms_results" pk=classroom.id %}" class="btn">
+                <iconify-icon icon="fe:line-chart" class="text-xl mr-1"></iconify-icon> Výsledky študentov
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="container mx-auto px-6 py-6 text-gray-200">
+        <b>😔 Zatiaľ tu nič nie je.</b> Ale možno už čoskoro!
+    </div>
+{% endblock %}

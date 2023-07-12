@@ -1,0 +1,32 @@
+{% extends 'common/base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Pridať sa do triedy {{ block.super }}{% endblock %}
+
+{% block body %}
+    <div class="max-w-3xl mx-auto py-10 lg:py-16 px-6">
+        <h1 class="tracking-tight text-3xl text-white font-bold lg:text-5xl">Pridať sa do triedy</h1>
+
+        <form method="post" class="space-y-6 mt-8">
+            {% csrf_token %}
+
+            {% if form.errors %}
+            <ul class="text-red-600 list-disc list-inside">
+                {% for errs in form.errors.values %}
+                    {% for err in errs %}
+                        <li>{{ err }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            <div>
+                <label for="{{ form.code.id_for_label }}" class="text-gray-100 mb-2 block">Kód na pripojenie</label>
+                {% render_field form.code class="input" %}
+            </div>
+
+            <button type="submit" class="btn">Pripojiť sa</button>
+        </form>
+    </div>
+
+{% endblock %}

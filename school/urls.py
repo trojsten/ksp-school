@@ -12,6 +12,7 @@ urlpatterns = [
     path("pages/<slug>/", pages.PageView.as_view()),
     path("", include("school.courses.urls")),
     path("", include("school.problems.urls")),
+    path("classrooms/", include("school.classrooms.urls")),
     path("api/import/", include("school.imports.urls")),
 ]
 

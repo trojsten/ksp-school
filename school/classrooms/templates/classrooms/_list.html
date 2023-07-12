@@ -1,0 +1,7 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+{% for classroom in classrooms %}
+    <a href="{% url "classrooms_detail" pk=classroom.id %}" class="p-6 hover:bg-gray-700 bg-gray-800 text-gray-100 text-lg lg:text-xl rounded-md border border-gray-600">
+        {{ classroom.name }}
+    </a>
+{% endfor %}
+</div>

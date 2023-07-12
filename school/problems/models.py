@@ -2,6 +2,7 @@ import dataclasses
 
 from django.conf import settings
 from django.db import models
+from django.urls import reverse
 from judge_client.client import Protocol
 
 from school.problems import constants
@@ -97,6 +98,12 @@ class Submit(models.Model):
             self.problem.testovac_id,
             self.code,
             self.language,
+        )
+
+    def get_absolute_url(self):
+        return reverse(
+            "submit_detail",
+            kwargs={"problem": self.problem.testovac_id, "submit": self.id},
         )
 
     def __str__(self):

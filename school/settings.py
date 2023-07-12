@@ -24,12 +24,15 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "mozilla_django_oidc",
+    #
     "school.users",
     "school.pages",
     "school.courses",
     "school.problems",
     "school.trackers",
     "school.imports",
+    "school.classrooms",
+    #
     "django_htmx",
     "django_probes",
     "widget_tweaks",
@@ -79,10 +82,6 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
-def oidc_logout():
-    return "https://id.trojsten.sk/oauth/logout"
-
-
 OIDC_OP_JWKS_ENDPOINT = env(
     "OIDC_OP_JWKS_ENDPOINT",
     default="https://id.trojsten.sk/oauth/.well-known/jwks.json",
@@ -100,7 +99,8 @@ OIDC_RP_SCOPES = "openid email profile"
 OIDC_RP_SIGN_ALGO = "RS256"
 OIDC_RP_CLIENT_ID = env("OIDC_RP_CLIENT_ID")
 OIDC_RP_CLIENT_SECRET = env("OIDC_RP_CLIENT_SECRET")
-OIDC_OP_LOGOUT_URL_METHOD = oidc_logout()
+OIDC_OP_LOGOUT_URL_METHOD = "school.users.auth.logout_url"
+OIDC_RENEW_ID_TOKEN_EXPIRY_SECONDS = 3600  # 1-hour
 ALLOW_LOGOUT_GET_METHOD = True
 
 LOGIN_URL = "oidc_authentication_init"

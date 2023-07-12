@@ -28,6 +28,12 @@
             Kurzy
         </a>
 
+        {% if user.is_authenticated %}
+        <a href="{% url 'classrooms_list' %}" class="text-white hover:text-gray-300">
+            Triedy
+        </a>
+        {% endif %}
+
         <div class="ml-auto text-sm">
             {% if user.is_authenticated %}
             <div class="relative select-none" x-data="{ open: false }">

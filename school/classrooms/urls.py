@@ -11,4 +11,9 @@ urlpatterns = [
         views.ClassroomResultsView.as_view(),
         name="classrooms_results",
     ),
+    path(
+        "<int:pk>/results/<course>/",
+        views.ClassroomResultsView.as_view(),
+        name="classrooms_results",
+    ),
 ]

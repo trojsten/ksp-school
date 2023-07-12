@@ -1,0 +1,56 @@
+{% extends 'common/base.html' %}
+
+{% block title %}Výsledky študentov {{ block.super }}{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto py-10 lg:py-16 px-6">
+        <h1 class="tracking-tight text-3xl text-white font-bold lg:text-5xl">Výsledky študentov</h1>
+        <p class="text-xl text-gray-200 lg:text-3xl mt-1">{{ classroom.name }}</p>
+    </div>
+
+    <div class="container mx-auto px-6 py-6 text-gray-100 overflow-x-auto">
+        <table>
+            <thead class="border-gray-100 border-b">
+                <tr>
+                    <th class="p-4 align-bottom text-left">Študent</th>
+                    {% for item in results.problems %}
+                    <th class="whitespace-nowrap p-4 text-right w-16" style="writing-mode: vertical-lr;">
+                        {{ item }}
+                    </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-600">
+                {% for row in results.rows %}
+                <tr>
+                    <td class="whitespace-nowrap p-4">
+                        <div class="w-64 overflow-hidden text-ellipsis">
+                            <img class="w-6 h-6 bg-gray-100 rounded-full mr-1 inline-block -mt-0.5" src="https://id.trojsten.sk/profile/{{ row.user.username }}/avatar/">
+                            {{ row.user.get_full_name }}
+                        </div>
+                    </td>
+                    {% for submit in row.submits %}
+                    <td class="p-4 text-white text-xl">
+                        {% if submit %}
+                            {% if submit.result_color == "green" %}
+                            <a href="{{ submit.get_absolute_url }}" class="bg-green-600 w-8 h-8 flex items-center justify-center rounded-md" data-tippy-content="{{ submit.result_pretty }}">
+                                <iconify-icon icon="feather-check"></iconify-icon>
+                            </a>
+                            {% elif submit.result_color == "orange" %}
+                            <a href="{{ submit.get_absolute_url }}" class="bg-orange-500 w-8 h-8 flex items-center justify-center rounded-md" data-tippy-content="{{ submit.result_pretty }}">
+                                <iconify-icon icon="feather-alert-triangle"></iconify-icon>
+                            </a>
+                            {% elif submit.result_color == "red" %}
+                            <a href="{{ submit.get_absolute_url }}" class="bg-red-600 w-8 h-8 flex items-center justify-center rounded-md" data-tippy-content="{{ submit.result_pretty }}">
+                                <iconify-icon icon="feather-x"></iconify-icon>
+                            </a>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

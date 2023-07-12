@@ -1,9 +1,14 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
+from django.utils.functional import cached_property
 from django.views.generic import DetailView, FormView, TemplateView
 
 from school.classrooms.forms import JoinForm
 from school.classrooms.models import Classroom, ClassroomUser
+from school.classrooms.results import get_course_results
+from school.courses.models import Course, LessonItem
+from school.problems.models import Submit
+from school.users.models import User
 
 
 class ClassroomListView(LoginRequiredMixin, TemplateView):
@@ -61,3 +66,24 @@ class ClassroomDetailView(LoginRequiredMixin, ClassroomMixin, DetailView):
 
 class ClassroomResultsView(LoginRequiredMixin, TeacherRequiredMixin, DetailView):
     template_name = "classrooms/teacher/results.html"
+
+    @cached_property
+    def course(self):
+        if "course" not in self.kwargs:
+            return Course.objects.first()
+        return get_object_or_404(Course, slug=self.kwargs["course"])
+
+    def get_results(self):
+        students = User.objects.filter(
+            id__in=ClassroomUser.objects.filter(
+                classroom=self.object, is_teacher=False
+            ).values("user")
+        )
+        print(students)
+        return get_course_results(self.course, students)
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["course"] = self.course
+        ctx["results"] = self.get_results()
+        return ctx

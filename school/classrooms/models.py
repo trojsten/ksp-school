@@ -33,3 +33,4 @@ class ClassroomUser(models.Model):
 
     class Meta:
         ordering = ["-is_teacher", "user__last_name", "user__first_name"]
+        unique_together = (("classroom", "user"),)

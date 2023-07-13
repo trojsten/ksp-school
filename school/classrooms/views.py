@@ -33,6 +33,11 @@ class ClassroomJoinView(LoginRequiredMixin, FormView):
     template_name = "classrooms/join.html"
     form_class = JoinForm
 
+    def get_form_kwargs(self, *args, **kwargs):
+        form_kwargs = super().get_form_kwargs(*args, **kwargs)
+        form_kwargs["request"] = self.request
+        return form_kwargs
+
     def form_valid(self, form):
         classroom = form.cleaned_data["classroom"]
         ClassroomUser.objects.create(user=self.request.user, classroom=classroom)

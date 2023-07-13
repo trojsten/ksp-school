@@ -9,8 +9,8 @@ from school.problems.models import Submit
 register = template.Library()
 
 
-@register.inclusion_tag("problems/tags/thermometers.html")
-def thermometers(submit: Submit):
+@register.inclusion_tag("problems/tags/thermometers.html", takes_context=True)
+def thermometers(context, submit: Submit):
     protocol = submit.protocol_object
 
     def get_test_batch(test: ProtocolTest):
@@ -26,7 +26,10 @@ def thermometers(submit: Submit):
     for _, tests in batch_tests:
         tests = list(tests)
         detail_visible = [
-            submit.problem.detail_visible or "sample" in test.name for test in tests
+            submit.problem.detail_visible
+            or context["request"].user.is_staff
+            or "sample" in test.name
+            for test in tests
         ]
         batches.append(
             {

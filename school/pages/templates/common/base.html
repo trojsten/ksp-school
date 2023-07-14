@@ -10,9 +10,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'app.css' %}">
-    <link rel="stylesheet" href="{% static 'code.css' %}">
-    <link rel="stylesheet" href="{% static 'bundle.css' %}">
+    <link rel="stylesheet" href="{% static 'app.css' %}?v={{ SCHOOL_VERSION }}">
+    <link rel="stylesheet" href="{% static 'code.css' %}?v={{ SCHOOL_VERSION }}">
+    <link rel="stylesheet" href="{% static 'bundle.css' %}?v={{ SCHOOL_VERSION }}">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% block meta %}{% endblock %}
@@ -63,7 +63,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous"></script>
 
-    <script src="{% static "bundle.js" %}"></script>
+    <script src="{% static "bundle.js" %}?v={{ SCHOOL_VERSION }}"></script>
     {% django_htmx_script %}
 
     {% if not debug %}

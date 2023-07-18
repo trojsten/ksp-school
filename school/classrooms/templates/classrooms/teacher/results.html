@@ -22,7 +22,7 @@
             </thead>
             <tbody class="divide-y divide-gray-600">
                 {% for row in results.rows %}
-                <tr>
+                <tr class="even:bg-gray-800 hover:bg-gray-700">
                     <td class="whitespace-nowrap p-4">
                         <div class="w-64 overflow-hidden text-ellipsis">
                             <img class="w-6 h-6 bg-gray-100 rounded-full mr-1 inline-block -mt-0.5" src="https://id.trojsten.sk/profile/{{ row.user.username }}/avatar/">

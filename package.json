@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.5.3",
-    "alpinejs": "^3.12.2",
+    "alpinejs": "^3.12.3",
     "esbuild": "^0.18.11",
     "feather-icons": "^4.29.0",
     "htmx.org": "^1.9.2",

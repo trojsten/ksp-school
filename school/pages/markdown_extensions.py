@@ -4,8 +4,8 @@ from xml.etree.ElementTree import ElementTree, SubElement
 from django.conf import settings
 from markdown import Extension, Markdown
 from markdown.blockprocessors import BlockProcessor
-from markdown.treeprocessors import Treeprocessor
 from markdown.preprocessors import Preprocessor
+from markdown.treeprocessors import Treeprocessor
 
 
 class SchoolImageTreeprocessor(Treeprocessor):
@@ -39,6 +39,10 @@ class CodeBlocksProcessor(Preprocessor):
         new_lines = []
         inside = 0
         for line in lines:
+            # when editing content via admin, some browsers use \r\n line ending
+            if line.endswith('\r'):
+                line = line[:-1]
+
             if line == "```vstup":
                 new_lines.append("<io>")
                 # new_lines.append("### Vstup")

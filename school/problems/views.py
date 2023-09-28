@@ -2,13 +2,13 @@ import os.path
 
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseNotAllowed, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import DetailView, FormView, TemplateView
+from django.views.generic import DetailView, FormView
 from django_htmx.http import HTMX_STOP_POLLING
 from judge_client.client import JudgeConnectionError
 
@@ -101,7 +101,12 @@ class SubmitCreateView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         submit = Submit()
         submit.user = self.request.user
-        submit.code = form.cleaned_data["file"].read().decode()
+        # do not throw 500 in case of file being unable to be decoded
+        # for example, if it is binary file, rather return JSON with message
+        try:
+            submit.code = form.cleaned_data["file"].read().decode()
+        except UnicodeDecodeError:
+            return JsonResponse({'error': 'Toto nie je platný súbor!'})
         submit.language = os.path.splitext(form.cleaned_data["file"].name)[1][1:]
         submit.problem = self.problem
         submit.lesson_item = self.item

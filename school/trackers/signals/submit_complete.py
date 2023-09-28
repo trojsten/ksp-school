@@ -15,4 +15,4 @@ def submit_updated(sender, instance: Submit, **kwargs):
     if instance.result != "OK":
         return
 
-    mark_completed(instance.lesson_item, instance.user)
+    mark_completed(instance.lesson_item, instance.user, cycle=False)

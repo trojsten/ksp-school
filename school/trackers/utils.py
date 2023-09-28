@@ -41,12 +41,17 @@ def get_or_create_trackers(
 
 @transaction.atomic
 def mark_completed(
-    item: LessonItem, user: User
+    item: LessonItem, user: User, cycle: bool = True
 ) -> tuple[LessonItemTracker, LessonTracker, CourseTracker]:
     item_tracker, lesson_tracker, course_tracker = get_or_create_trackers(item, user)
 
     # We only update the tracker if it was not completed before,
     if item_tracker.completed_at is not None:
+        # we do not want to mark it as incomplete in case of second OK submit
+        # but we want to cycle when user marks lesson as complete or not
+        if not cycle:
+            return item_tracker, lesson_tracker, course_tracker
+
         item_tracker.completed_at = None
         item_tracker.save()
 

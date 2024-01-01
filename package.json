@@ -19,7 +19,7 @@
     "alpinejs": "^3.13.0",
     "esbuild": "^0.19.4",
     "feather-icons": "^4.29.0",
-    "htmx.org": "^1.9.6",
+    "htmx.org": "^1.9.10",
     "iconify-icon": "^1.0.8",
     "tippy.js": "^6.3.7"
   }

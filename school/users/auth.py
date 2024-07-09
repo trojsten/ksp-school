@@ -35,3 +35,6 @@ class TrojstenOIDCAB(OIDCAuthenticationBackend):
         user.username = claims.get("preferred_username")
         user.first_name = claims.get("given_name", "")
         user.last_name = claims.get("family_name", "")
+
+        veduci = "trojsten:veduci" in claims.get("groups", [])
+        user.is_staff = veduci

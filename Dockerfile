@@ -16,7 +16,14 @@ CMD ["npm", "run", "dev"]
 FROM python:3.11-slim-bullseye AS base
 WORKDIR /app
 RUN useradd --create-home appuser \
-    && chmod 777 /app
+    && chmod 777 /app \
+    && chown appuser /app
+
+ARG MULTIRUN_VERSION=1.1.3
+ADD https://github.com/nicolas-van/multirun/releases/download/${MULTIRUN_VERSION}/multirun-x86_64-linux-gnu-${MULTIRUN_VERSION}.tar.gz /tmp
+RUN tar -xf /tmp/multirun-x86_64-linux-gnu-${MULTIRUN_VERSION}.tar.gz \
+    && mv multirun /bin \
+    && rm /tmp/*
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -30,4 +37,5 @@ RUN pipenv install --system --deploy
 
 COPY --chown=appuser:appuser . /app/
 COPY --from=frontend-build /app/school/static/app.css /app/school/static/bundle.css /app/school/static/bundle.js /app/school/static/
-CMD ["/app/entrypoint.sh"]
+
+CMD ["/bin/multirun", "caddy run --adapter caddyfile --config /app/Caddyfile", "/app/entrypoint.sh"]

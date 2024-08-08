@@ -96,7 +96,7 @@ OIDC_OP_USER_ENDPOINT = env(
 OIDC_OP_TOKEN_ENDPOINT = env(
     "OIDC_OP_TOKEN_ENDPOINT", default="https://id.trojsten.sk/oauth/token/"
 )
-OIDC_RP_SCOPES = "openid email profile"
+OIDC_RP_SCOPES = "openid email profile groups"
 OIDC_RP_SIGN_ALGO = "RS256"
 OIDC_RP_CLIENT_ID = env("OIDC_RP_CLIENT_ID")
 OIDC_RP_CLIENT_SECRET = env("OIDC_RP_CLIENT_SECRET")

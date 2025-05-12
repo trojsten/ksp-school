@@ -1,7 +1,7 @@
 import os.path
 import zipfile
 
-from django.core.files.storage import Storage, get_storage_class
+from django.core.files.storage import Storage, storages
 from django.http import JsonResponse
 
 from school.imports.forms import ZipImportForm
@@ -16,7 +16,7 @@ class ImportAssetsView(ImportView):
             data = form.errors.as_json()
             return JsonResponse({"errors": data, "ok": False}, status=400)
 
-        storage: Storage = get_storage_class()()
+        storage: Storage = storages["default"]
         uploaded_files = set()
         with zipfile.ZipFile(form.cleaned_data["file"]) as z:
             for file in z.filelist:

@@ -1,13 +1,54 @@
-[tool.isort]
-profile = "black"
+[project]
+name = "school"
+version = "0.0.1"
+requires-python = "~=3.11"
+dependencies = [
+    "Django~=5.2.0",
+    "django-environ>=0.11.0,<0.12",
+    "psycopg[binary]>=3.2.1,<4",
+    "markdown~=3.7",
+    "pillow>=10.0.1,<11",
+    "trojsten-judge-client>=1.0.2,<2",
+    "pygments>=2.18.0,<3",
+    "django-debug-toolbar>=4.4.6,<5",
+    "python-frontmatter>=1.0.0,<2",
+    "pyyaml>=6.0.2,<7",
+    "fastjsonschema>=2.18.1,<3",
+    "gunicorn>=22.0.0,<23",
+    "mozilla-django-oidc>=4.0.1,<5",
+    "django-htmx>=1.19.0,<2",
+    "django-probes>=1.7.0,<2",
+    "sentry-sdk>=2.14.0,<3",
+    "django-widget-tweaks>=1.5.0,<2",
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit==3.3.3",
+    "bumpver",
+]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "N", "DJ", "T20", "Q"]
 
 [tool.bumpver]
 current_version = "2023.9"
-version_pattern = "YYYY.PATCH"
+version_pattern = "YYYY.INC1"
 commit_message = "bump version {old_version} -> {new_version}"
+tag_message = "{new_version}"
+tag_scope = "default"
+pre_commit_hook = ""
+post_commit_hook = ""
 commit = true
 tag = true
 push = true
+
+[tool.uv]
+package = false
+
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"
 
 [tool.bumpver.file_patterns]
 "pyproject.toml" = [

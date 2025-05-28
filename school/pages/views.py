@@ -9,9 +9,7 @@ class HomepageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx[
-            "home_code"
-        ] = """def get_root(node):
+        ctx["home_code"] = """def get_root(node):
     parent = parents[node]
     weight = weights[node]
     if parent == node:

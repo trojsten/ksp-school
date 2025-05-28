@@ -1,4 +1,4 @@
-{% if protocol.final_verdict == "CERR" %}
+{% if protocol.final_verdict == "CEX" %}
 
     <div class="w-full rounded-md px-4 py-3 bg-orange-600 border border-gray-600 text-white">
         <p>Chyba počas kompilácie</p>
@@ -8,7 +8,7 @@
     </div>
 
     <div class="text-white bg-black p-3 rounded-md mt-4 overflow-x-auto">
-        <pre>{{ protocol.compile_log }}</pre>
+        <pre>{{ protocol.log }}</pre>
     </div>
 
 {% else %}
@@ -34,13 +34,13 @@
     <div class="text-white mt-6 space-y-4">
     {% for batch in batches %}
         {% for test, visible in batch.tests %}
-            {% if test.details and visible %}
+            {% if test.log and visible %}
                 <div id="{{ test.name }}">
                     <div class="text-sm text-gray-300 mb-1">
                         Výsledok pre <code>{{ test.name }}</code>:
                     </div>
                     <div class="bg-black p-3 rounded-md">
-                        <pre>{{ test.details }}</pre>
+                        <pre>{{ test.log }}</pre>
                     </div>
                 </div>
             {% endif %}

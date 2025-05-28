@@ -8,14 +8,14 @@
 {% block body_class %}min-h-screen flex flex-col{% endblock %}
 
 {% block body %}
-<div class="flex grow flex-col-reverse lg:flex-row">
-    <div class="w-full shink-0 p-8 bg-black overflow-auto">
+<div class="grid grid-cols-1 lg:grid-cols-2">
+    <div class="w-full p-8 bg-black overflow-auto">
         <div class="codehilite">
             {% highlight submit.program submit.language %}
         </div>
     </div>
 
-    <div class="w-full shink-0 p-8">
+    <div class="w-full p-8 max-lg:order-first">
         <a href="{{ back_url }}" class="btn mb-6">
             <i data-feather="arrow-left" class="h-4 w-4"></i>
             Späť

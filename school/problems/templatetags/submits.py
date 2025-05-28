@@ -15,7 +15,11 @@ def thermometers(context, submit: Submit):
     protocol = submit.protocol_object
 
     if not protocol.tests:
-        return
+        return {
+            "submit": submit,
+            "protocol": protocol,
+            "batches": [],
+        }
 
     batch_tests = groupby(
         sorted(protocol.tests, key=attrgetter("batch")), key=lambda test: test.batch

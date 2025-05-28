@@ -35,12 +35,12 @@ class SchoolImageTreeprocessor(Treeprocessor):
 
 
 class CodeBlocksProcessor(Preprocessor):
-    def run(self, lines) -> None:
+    def run(self, lines) -> list[str]:
         new_lines = []
         inside = 0
         for line in lines:
             # when editing content via admin, some browsers use \r\n line ending
-            if line.endswith('\r'):
+            if line.endswith("\r"):
                 line = line[:-1]
 
             if line == "```vstup":
@@ -62,30 +62,30 @@ class CodeBlocksProcessor(Preprocessor):
 
 
 class BoxBlockProcessor(BlockProcessor):
-    RE_FENCE_START = r'<io>'
-    RE_FENCE_END = r'</io>'
+    RE_FENCE_START = r"<io>"
+    RE_FENCE_END = r"</io>"
 
-    def test(self, parent, block):
-        return re.match(self.RE_FENCE_START, block)
+    def test(self, parent, block) -> bool:
+        return re.match(self.RE_FENCE_START, block) is not None
 
     def run(self, parent, blocks):
         original_block = blocks[0]
-        blocks[0] = re.sub(self.RE_FENCE_START, '', blocks[0])
+        blocks[0] = re.sub(self.RE_FENCE_START, "", blocks[0])
 
         # Find block with ending fence
         for block_num, block in enumerate(blocks):
             if re.search(self.RE_FENCE_END, block):
                 # remove fence
-                blocks[block_num] = re.sub(self.RE_FENCE_END, '', block)
+                blocks[block_num] = re.sub(self.RE_FENCE_END, "", block)
                 # render fenced area inside a new div
-                e = SubElement(parent, 'div')
-                e.set('class', 'io')
-                inp = SubElement(e, 'h3')
+                e = SubElement(parent, "div")
+                e.set("class", "io")
+                inp = SubElement(e, "h3")
                 inp.text = "Vstup"
-                out = SubElement(e, 'h3')
+                out = SubElement(e, "h3")
                 out.text = "Výstup"
 
-                self.parser.parseBlocks(e, blocks[0:block_num + 1])
+                self.parser.parseBlocks(e, blocks[0 : block_num + 1])
                 # remove used blocks
                 for i in range(0, block_num + 1):
                     blocks.pop(0)
@@ -96,7 +96,7 @@ class BoxBlockProcessor(BlockProcessor):
 
 
 class KspSchoolExtension(Extension):
-    def extendMarkdown(self, md: Markdown) -> None:
+    def extendMarkdown(self, md: Markdown) -> None:  # noqa: N802
         md.treeprocessors.register(SchoolImageTreeprocessor(md), "ksp_school_images", 0)
         md.preprocessors.register(CodeBlocksProcessor(md), "IO_code_blocks", 100000)
-        md.parser.blockprocessors.register(BoxBlockProcessor(md.parser), 'box', 100000)
+        md.parser.blockprocessors.register(BoxBlockProcessor(md.parser), "box", 100000)

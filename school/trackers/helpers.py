@@ -16,7 +16,7 @@ def get_lessons_with_trackers(
     lessons: List[Lesson], user: User
 ) -> List[LessonWithTracker]:
     if not user.is_authenticated:
-        return [LessonWithTracker(l, None) for l in lessons]
+        return [LessonWithTracker(lesson, None) for lesson in lessons]
 
     trackers = {
         t.lesson_id: t
@@ -25,7 +25,7 @@ def get_lessons_with_trackers(
         )
     }
 
-    return [LessonWithTracker(l, trackers.get(l.id)) for l in lessons]
+    return [LessonWithTracker(lesson, trackers.get(lesson.id)) for lesson in lessons]
 
 
 @dataclass

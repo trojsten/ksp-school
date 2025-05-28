@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('courses', '0007_alter_course_options_course_order'),
+        ("courses", "0007_alter_course_options_course_order"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='course',
-            name='recommended_courses',
-            field=models.ManyToManyField(blank=True, to='courses.Course'),
+            model_name="course",
+            name="recommended_courses",
+            field=models.ManyToManyField(blank=True, to="courses.Course"),
         ),
     ]

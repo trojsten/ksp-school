@@ -1,4 +1,4 @@
-import os.path
+import json
 
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -14,8 +14,8 @@ from judge_client.client import JudgeConnectionError
 
 from school.courses.models import LessonItem
 from school.problems import forms
-from school.problems.forms import ProtocolForm
 from school.problems.models import Problem, Submit
+from school.problems.utils import enqueue_judge_submit
 
 
 class SubmitDetailView(LoginRequiredMixin, DetailView):
@@ -23,7 +23,7 @@ class SubmitDetailView(LoginRequiredMixin, DetailView):
     pk_url_kwarg = "submit"
 
     def get_queryset(self):
-        qs = Submit.objects.filter(problem__testovac_id=self.kwargs["problem"])
+        qs = Submit.objects.filter(problem__slug=self.kwargs["problem"])
         if not self.request.user.is_staff:
             qs = qs.filter(user=self.request.user)
         return qs
@@ -31,7 +31,7 @@ class SubmitDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         submits = Submit.objects.filter(
-            problem__testovac_id=self.kwargs["problem"], user=self.request.user
+            problem__slug=self.kwargs["problem"], user=self.request.user
         ).select_related("lesson_item__lesson__course")
 
         url = None
@@ -39,7 +39,7 @@ class SubmitDetailView(LoginRequiredMixin, DetailView):
             item = get_object_or_404(
                 LessonItem,
                 id=self.request.GET["liid"],
-                problem__testovac_id=self.kwargs["problem"],
+                problem__slug=self.kwargs["problem"],
             )
             submits = submits.filter(lesson_item=item)
             url = reverse(
@@ -69,7 +69,7 @@ class SubmitProtocolView(LoginRequiredMixin, DetailView):
     pk_url_kwarg = "submit"
 
     def get_queryset(self):
-        qs = Submit.objects.filter(problem__testovac_id=self.kwargs["problem"])
+        qs = Submit.objects.filter(problem__slug=self.kwargs["problem"])
         if not self.request.user.is_staff:
             qs = qs.filter(user=self.request.user)
         return qs
@@ -77,7 +77,7 @@ class SubmitProtocolView(LoginRequiredMixin, DetailView):
     def get(self, request, *args, **kwargs):
         resp = super().get(request, *args, **kwargs)
 
-        submit = self.get_object()
+        submit: Submit = self.get_object()
         if submit.protocol:
             resp.status_code = HTMX_STOP_POLLING
         return resp
@@ -88,7 +88,7 @@ class SubmitCreateView(LoginRequiredMixin, FormView):
     form_class = forms.SubmitForm
 
     def dispatch(self, request, *args, **kwargs):
-        self.problem = get_object_or_404(Problem, testovac_id=kwargs["problem"])
+        self.problem = get_object_or_404(Problem, slug=kwargs["problem"])
 
         self.item = None
         if "liid" in request.GET:
@@ -99,26 +99,27 @@ class SubmitCreateView(LoginRequiredMixin, FormView):
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        submit = Submit()
-        submit.user = self.request.user
-        # do not throw 500 in case of file being unable to be decoded
-        # for example, if it is binary file, rather return JSON with message
+        submit = Submit(
+            user=self.request.user,
+            program=form.cleaned_data["file"],
+            problem=self.problem,
+            lesson_item=self.item,
+        )
         try:
-            submit.code = form.cleaned_data["file"].read().decode()
-        except UnicodeDecodeError:
-            return JsonResponse({'error': 'Toto nie je platný súbor!'})
-        submit.language = os.path.splitext(form.cleaned_data["file"].name)[1][1:]
-        submit.problem = self.problem
-        submit.lesson_item = self.item
-        submit.save()
-
-        try:
-            submit.send_to_testovac()
+            judge_submit = enqueue_judge_submit(
+                self.problem.judge_namespace if self.problem.judge_namespace else None,
+                self.problem.judge_task,
+                self.request.user,
+                form.cleaned_data["file"],
+            )
+            submit.public_id = judge_submit.public_id
+            submit.protocol_key = judge_submit.protocol_key
         except JudgeConnectionError:
             submit.result = "CONNERR"
             submit.save()
+        submit.save()
 
-        url = reverse("submit_detail", args=[self.problem.testovac_id, submit.id])
+        url = reverse("submit_detail", args=[self.problem.slug, submit.id])
         if self.item:
             url += f"?liid={self.item.id}"
         return HttpResponseRedirect(url)
@@ -131,25 +132,29 @@ class SubmitCreateView(LoginRequiredMixin, FormView):
 @method_decorator(csrf_exempt, name="dispatch")
 class UploadProtocolView(View):
     def post(self, request, *args, **kwargs):
-        if not settings.TESTOVAC_TOKEN:
+        if not settings.JUDGE_TOKEN:
             return JsonResponse(
                 {"errors": "Protocol upload is disabled.", "ok": False}, status=403
             )
 
-        if settings.TESTOVAC_TOKEN != request.headers.get("X-Token", None):
+        json_data = json.loads(self.request.body)
+
+        if json_data["token"] != settings.JUDGE_TOKEN:
             return JsonResponse(
                 {"errors": "Wrong access token.", "ok": False}, status=403
             )
 
-        form = ProtocolForm(request.POST, request.FILES)
+        submit: Submit = get_object_or_404(Submit, public_id=json_data["public_id"])
 
-        if not form.is_valid():
-            data = form.errors.as_json()
-            return JsonResponse({"errors": data, "ok": False}, status=400)
+        if "status" in json_data:
+            submit.status = json_data["status"]
+        if "testing_status" in json_data:
+            submit.testing_status = json_data["testing_status"]
 
-        submit = get_object_or_404(Submit, id=form.cleaned_data["submit"])
-        submit.protocol = form.cleaned_data["protocol"].read().decode("utf-8")
-        submit.result = submit.protocol_object.result
+        submit.protocol = json_data["protocol"]
+        if "final_verdict" in json_data["protocol"]:
+            submit.result = submit.protocol["final_verdict"]
+
         submit.save()
 
         return JsonResponse({"ok": True})

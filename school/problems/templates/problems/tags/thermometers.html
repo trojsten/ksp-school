@@ -1,4 +1,4 @@
-{% if protocol.result == "CERR" %}
+{% if protocol.final_verdict == "CERR" %}
 
     <div class="w-full rounded-md px-4 py-3 bg-orange-600 border border-gray-600 text-white">
         <p>Chyba počas kompilácie</p>
@@ -15,22 +15,16 @@
 
     {% for batch in batches %}
     <div class="flex gap-1 mt-1 text-white">
-        <div class="bg-gray-800 w-12 h-12 flex flex-none items-center justify-center rounded-md text-xs">{{ batch.score }}%</div>
+        <div class="bg-gray-800 w-12 h-12 flex flex-none items-center justify-center rounded-md text-xs" data-tippy-content="Sada: {{ batch.name }}">{{ batch.score }}%</div>
         <div class="flex gap-1 flex-wrap">
             {% for test, _ in batch.tests %}
-                {% if test.result == "OK" %}
-                <div class="bg-green-600 w-12 h-12 flex items-center justify-center rounded-md" data-tippy-content="OK ({{ test.time }} ms)"><i data-feather="check" class="w-5"></i></div>
-                {% elif test.result == "WA" %}
-                <a class="bg-red-600 w-12 h-12 flex items-center justify-center rounded-md" data-tippy-content="Zlá odpoveď ({{ test.time }} ms)" href="#{{ test.name }}"><i data-feather="x" class="w-5"></i></a>
-                {% elif test.result == "TLE" %}
-                <div class="bg-orange-500 w-12 h-12 flex items-center justify-center rounded-md" data-tippy-content="Časový limit vypršal ({{ test.time }} ms)"><i data-feather="clock" class="w-5"></i></div>
-                {% elif test.result == "EXC" %}
-                <div class="bg-orange-500 w-12 h-12 flex items-center justify-center rounded-md" data-tippy-content="Chyba počas behu programu ({{ test.time }} ms)"><i data-feather="alert-triangle" class="w-5"></i></div>
-                {% elif test.result == "MLE" %}
-                <div class="bg-orange-500 w-12 h-12 flex items-center justify-center rounded-md" data-tippy-content="Prekročený limit pamäte ({{ test.time }} ms)"><i data-feather="triangle" class="w-5"></i></div>
-                {% else %}
-                <div class="bg-gray-600 w-12 h-12 flex items-center justify-center rounded-md"></div>
-                {% endif %}
+                <a
+                    class="w-12 h-12 flex items-center justify-center rounded-md {% if test.verdict.color == "gray" %}bg-gray-600 text-gray-300{% elif test.verdict.color == "red" %}bg-red-600 text-white{% elif test.verdict.color == "green" %}bg-green-600 text-white{% elif test.verdict.color == "orange" %}bg-orange-500 text-white{% elif test.verdict.color == "yellow" %}bg-yellow-500 text-white{% endif %}"
+                    data-tippy-content="{{ test.name }}: {{ test.verdict.human_name }} {% if test.stats %}({{ test.stats.cpu_time }} ms){% endif %}"
+                    href="#{{ test.name }}"
+                >
+                    <i data-feather="{{ test.verdict.icon }}" class="w-5"></i>
+                </a>
             {% endfor %}
         </div>
     </div>

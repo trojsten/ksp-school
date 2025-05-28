@@ -9,25 +9,26 @@
 
 {% block body %}
 <div class="flex grow flex-col-reverse lg:flex-row">
-        <div class="w-full shink-0 p-8 bg-black overflow-auto">
-            <div class="codehilite">
-                {% highlight submit.code submit.language %}
-            </div>
+    <div class="w-full shink-0 p-8 bg-black overflow-auto">
+        <div class="codehilite">
+            {% highlight submit.program submit.language %}
         </div>
-        <div class="w-full shink-0 p-8">
-            <a href="{{ back_url }}" class="btn mb-6">
-                <i data-feather="arrow-left" class="h-4"></i>
-                Späť
-            </a>
+    </div>
 
-            <h1 class="text-white font-bold text-3xl mb-6">Protokol testovania</h1>
-            {% include "problems/_protocol.html" %}
+    <div class="w-full shink-0 p-8">
+        <a href="{{ back_url }}" class="btn mb-6">
+            <i data-feather="arrow-left" class="h-4 w-4"></i>
+            Späť
+        </a>
 
-            <h2 class="text-white font-bold text-2xl mb-4 mt-12">Odovzdávanie programu</h2>
-            {% submit_form submit.problem lesson_item_id=lesson_item_id %}
+        <h1 class="text-white font-bold text-3xl mb-6">Protokol testovania</h1>
+        {% include "problems/_protocol.html" %}
 
-            <h2 class="text-white font-bold text-2xl mt-12 mb-4">Posledné submity</h2>
-            {% submit_list submits lesson_item_id=lesson_item_id %}
-        </div>
+        <h2 class="text-white font-bold text-2xl mb-4 mt-12">Odovzdávanie programu</h2>
+        {% submit_form submit.problem lesson_item_id=lesson_item_id %}
+
+        <h2 class="text-white font-bold text-2xl mt-12 mb-4">Posledné submity</h2>
+        {% submit_list submits lesson_item_id=lesson_item_id %}
+    </div>
 </div>
 {% endblock %}

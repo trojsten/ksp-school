@@ -1,14 +1,13 @@
 [project]
 name = "school"
 version = "0.0.1"
-requires-python = "~=3.11"
+requires-python = "~=3.12"
 dependencies = [
     "Django~=5.2.0",
     "django-environ>=0.11.0,<0.12",
     "psycopg[binary]>=3.2.1,<4",
     "markdown~=3.7",
     "pillow>=10.0.1,<11",
-    "trojsten-judge-client>=1.0.2,<2",
     "pygments>=2.18.0,<3",
     "django-debug-toolbar>=4.4.6,<5",
     "python-frontmatter>=1.0.0,<2",
@@ -20,6 +19,8 @@ dependencies = [
     "django-probes>=1.7.0,<2",
     "sentry-sdk>=2.14.0,<3",
     "django-widget-tweaks>=1.5.0,<2",
+    "judge-client~=2.0.0",
+    "django-types>=0.20.0",
 ]
 
 [dependency-groups]
@@ -49,6 +50,9 @@ package = false
 [[tool.uv.index]]
 name = "pypi"
 url = "https://pypi.org/simple"
+
+[tool.uv.sources]
+judge-client = { git = "https://github.com/trojsten/judge-client" }
 
 [tool.bumpver.file_patterns]
 "pyproject.toml" = [

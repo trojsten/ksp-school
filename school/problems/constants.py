@@ -1,21 +1,14 @@
-TESTOVAC_MESSAGES = {
-    "": "Čaká na otestovanie",
-    "WA": "Zlá odpoveď",
-    "TLE": "Časový limit vypršal",
-    "EXC": "Chyba počas behu programu",
-    "MLE": "Prekročený limit pamäte",
-    "OK": "OK",
-    "CONNERR": "Chyba testovača",
-    "CERR": "Chyba počas kompilácie",
-}
+from judge_client.types import Verdict
 
-TESTOVAC_COLORS = {
-    "": "gray",
-    "WA": "red",
-    "TLE": "orange",
-    "EXC": "orange",
-    "MLE": "orange",
-    "CERR": "orange",
-    "OK": "green",
-    "CONNERR": "gray",
+VERDICT_ICONS = {
+    Verdict.OK: "check",
+    Verdict.WA: "x",
+    Verdict.TLE: "clock",
+    Verdict.EXC: "alert-triangle",
+    Verdict.PRV: "circle-triangle",
+    Verdict.MEM: "triangle",
+    Verdict.CEX: "x-octagon",
+    Verdict.SEX: "slash",
+    Verdict.POK: "check",
+    Verdict.IGN: "skip-forward",
 }

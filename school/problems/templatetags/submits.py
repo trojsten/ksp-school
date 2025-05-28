@@ -1,9 +1,10 @@
 from itertools import groupby
+from operator import attrgetter
 from typing import List
 
 from django import template
-from judge_client.client import ProtocolTest
 
+from school.problems.constants import VERDICT_ICONS
 from school.problems.models import Submit
 
 register = template.Library()
@@ -13,18 +14,19 @@ register = template.Library()
 def thermometers(context, submit: Submit):
     protocol = submit.protocol_object
 
-    def get_test_batch(test: ProtocolTest):
-        num, _ = test.name.split(".", 1)
-        try:
-            return int(num)
-        except ValueError:
-            return test.name
+    if not protocol.tests:
+        return
 
-    batch_tests = groupby(protocol.tests, key=get_test_batch)
+    batch_tests = groupby(
+        sorted(protocol.tests, key=attrgetter("batch")), key=lambda test: test.batch
+    )
     batches = []
 
     for _, tests in batch_tests:
         tests = list(tests)
+        for t in tests:
+            t.verdict.human_name = t.verdict.get_human_name("sk")
+            t.verdict.icon = VERDICT_ICONS.get(t.verdict, "circle")
         detail_visible = [
             submit.problem.detail_visible
             or context["request"].user.is_staff
@@ -33,14 +35,19 @@ def thermometers(context, submit: Submit):
         ]
         batches.append(
             {
-                "score": 100
-                * len(list(filter(lambda x: x.result == "OK", tests)))
-                // len(tests),
+                "score": int(
+                    100 * sum(map(lambda test: test.score, tests)) // len(tests)
+                ),
+                "name": tests[0].batch,
                 "tests": list(zip(tests, detail_visible)),
             }
         )
 
-    return {"submit": submit, "protocol": protocol, "batches": batches}
+    return {
+        "submit": submit,
+        "protocol": protocol,
+        "batches": batches,
+    }
 
 
 @register.inclusion_tag("problems/tags/submit_list.html")

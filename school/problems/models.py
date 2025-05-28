@@ -1,20 +1,28 @@
-import dataclasses
+import secrets
+from os import path
 
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
-from judge_client.client import Protocol
+from judge_client.types import Protocol, SubmitStatus, TestingStatus, Verdict
 
-from school.problems import constants
-from school.problems.services import get_judge_client
+from school.utils import get_extension
+
+
+def submit_file_filepath(instance: "Submit", filename):
+    _, ext = path.splitext(filename)
+    rnd_str = secrets.token_hex(16)
+    return f"submits/{instance.problem_id}/{instance.user_id}_{rnd_str}{ext}"
 
 
 class Tag(models.Model):
+    id: int
+
+    name = models.CharField(verbose_name="názov", max_length=256)
+
     class Meta:
         verbose_name = "tag"
         verbose_name_plural = "tagy"
-
-    name = models.CharField(verbose_name="názov", max_length=256)
 
     def __str__(self):
         return self.name
@@ -27,11 +35,14 @@ class Problem(models.Model):
         HARD = "hard", "hard"
         UNKNOWN = "unknown", "unknown"
 
-    class Meta:
-        verbose_name = "úloha"
-        verbose_name_plural = "úlohy"
+    id: int
 
     name = models.CharField(verbose_name="názov", max_length=64)
+    slug = models.SlugField(
+        verbose_name="slug",
+        max_length=64,
+        unique=True,
+    )
     content = models.TextField(verbose_name="zadanie", blank=True)
     difficulty = models.CharField(
         verbose_name="obtiažnosť",
@@ -41,33 +52,75 @@ class Problem(models.Model):
     detail_visible = models.BooleanField(
         verbose_name="viditeľnosť detailov testovania", default=False
     )
-    testovac_id = models.CharField(
-        verbose_name="ID úlohy pre testovač", max_length=128, unique=True
+    judge_namespace = models.CharField(
+        verbose_name="namespace v ktorom je úloha v Judgi",
+        max_length=128,
+        default="",
+        blank=True,
     )
+    judge_task = models.CharField(verbose_name="názov úlohy pre Judge", max_length=128)
     tags = models.ManyToManyField(Tag)
+
+    class Meta:
+        verbose_name = "úloha"
+        verbose_name_plural = "úlohy"
+
+        constraints = [
+            models.UniqueConstraint(
+                "judge_task",
+                "judge_namespace",
+                name="problem__judge_task_judge_namespace",
+            )
+        ]
 
     def __str__(self):
         return self.name
 
 
 class Submit(models.Model):
-    class Meta:
-        verbose_name = "submit"
-        verbose_name_plural = "submity"
-        ordering = ("-created_at",)
+    class JudgeTestingStatus(models.IntegerChoices):
+        QUEUED = 0, "queued"
+        FINISHED = 1, "finished"
+        FAILED = 2, "failed"
+
+    id: int
 
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE, verbose_name="úloha")
+    problem_id: int
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="používateľ"
     )
+    user_id: int
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name="čas", db_index=True
     )
 
-    code = models.TextField(blank=True, verbose_name="odovzdaný program")
-    language = models.CharField(max_length=16, verbose_name="jazyk")
-    protocol = models.TextField(blank=True, verbose_name="protokol")
+    program = models.FileField(
+        verbose_name="odovzdaný program",
+        upload_to=submit_file_filepath,
+        max_length=255,
+    )
+    protocol = models.JSONField(blank=True, default=dict, verbose_name="protokol")
+
+    status = models.SmallIntegerField(
+        choices=JudgeTestingStatus.choices,
+        verbose_name="status submitu na Judgi",
+        default=JudgeTestingStatus.QUEUED,
+    )
+    testing_status = models.CharField(
+        max_length=32, blank=True, default="", verbose_name="status testovania na Judgi"
+    )
+
     result = models.CharField(blank=True, max_length=16, verbose_name="verdikt")
+    public_id = models.CharField(
+        max_length=255,
+        unique=True,
+        verbose_name="public ID submitu",
+        null=True,
+        default=None,
+        blank=True,
+    )
+    protocol_key = models.CharField(max_length=255, blank=True)
 
     lesson_item = models.ForeignKey(
         "courses.LessonItem",
@@ -76,35 +129,46 @@ class Submit(models.Model):
         verbose_name="časť lekcie",
         on_delete=models.SET_NULL,
     )
+    lesson_item_id: int
 
-    @property
-    def protocol_object(self) -> Protocol:
-        client = get_judge_client()
-        return client.parse_protocol(self.protocol, 100)
+    class Meta:
+        verbose_name = "submit"
+        verbose_name_plural = "submity"
+        ordering = ("-created_at",)
 
-    @property
-    def result_pretty(self):
-        return constants.TESTOVAC_MESSAGES[self.result]
-
-    @property
-    def result_color(self):
-        return constants.TESTOVAC_COLORS[self.result]
-
-    def send_to_testovac(self):
-        client = get_judge_client()
-        client.submit(
-            f"SCHOOL-{self.id}",
-            f"SCHOOL-{self.user_id}",
-            self.problem.testovac_id,
-            self.code,
-            self.language,
-        )
+    def __str__(self):
+        return f"Submit {self.id}"
 
     def get_absolute_url(self):
         return reverse(
             "submit_detail",
-            kwargs={"problem": self.problem.testovac_id, "submit": self.id},
+            kwargs={"problem": self.problem.slug, "submit": self.id},
         )
 
-    def __str__(self):
-        return f"Submit {self.id}"
+    @property
+    def language(self) -> str:
+        return get_extension(self.program.path)
+
+    @property
+    def protocol_object(self) -> Protocol:
+        return Protocol(**self.protocol)
+
+    @property
+    def status_pretty(self) -> str:
+        if self.result:
+            return self.result_pretty
+
+        if self.status == self.JudgeTestingStatus.QUEUED and self.testing_status:
+            return TestingStatus(self.testing_status).get_human_name("sk")
+
+        return SubmitStatus(self.status).get_human_name("sk")
+
+    @property
+    def result_pretty(self) -> str:
+        return Verdict(self.result).get_human_name("sk")
+
+    @property
+    def result_color(self) -> str:
+        if not self.result:
+            return "gray"
+        return Verdict(self.result).color

@@ -1,5 +1,3 @@
-import sys
-
 from django.http import JsonResponse
 
 from school.imports.forms import ZipImportForm
@@ -11,7 +9,7 @@ class ImportProblemsView(ImportView):
     def post(self, request, *args, **kwargs):
         def import_problems(name, meta, body):
             problem, _ = Problem.objects.update_or_create(
-                testovac_id=name,
+                slug=name,
                 defaults={
                     "name": meta.get("name", "???"),
                     "content": body,
@@ -39,9 +37,7 @@ class ImportProblemsView(ImportView):
         )
 
         orphans = list(
-            Problem.objects.exclude(testovac_id__in=ids).values_list(
-                "testovac_id", flat=True
-            )
+            Problem.objects.exclude(slug__in=ids).values_list("slug", flat=True)
         )
 
         return JsonResponse({"ok": True, "imported": len(ids), "orphans": orphans})

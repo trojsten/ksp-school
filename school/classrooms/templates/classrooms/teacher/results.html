@@ -33,15 +33,15 @@
                     <td class="p-4 text-white text-xl">
                         {% if submit %}
                             {% if submit.result_color == "green" %}
-                            <a href="{{ submit.get_absolute_url }}" class="bg-green-600 w-8 h-8 flex items-center justify-center rounded-md" data-tippy-content="{{ submit.result_pretty }}">
+                            <a href="{{ submit.get_absolute_url }}" class="bg-green-600 w-8 h-8 flex items-center justify-center rounded-md" data-tippy-content="{{ submit.status_pretty }}">
                                 <iconify-icon icon="feather-check"></iconify-icon>
                             </a>
                             {% elif submit.result_color == "orange" %}
-                            <a href="{{ submit.get_absolute_url }}" class="bg-orange-500 w-8 h-8 flex items-center justify-center rounded-md" data-tippy-content="{{ submit.result_pretty }}">
+                            <a href="{{ submit.get_absolute_url }}" class="bg-orange-500 w-8 h-8 flex items-center justify-center rounded-md" data-tippy-content="{{ submit.status_pretty }}">
                                 <iconify-icon icon="feather-alert-triangle"></iconify-icon>
                             </a>
                             {% elif submit.result_color == "red" %}
-                            <a href="{{ submit.get_absolute_url }}" class="bg-red-600 w-8 h-8 flex items-center justify-center rounded-md" data-tippy-content="{{ submit.result_pretty }}">
+                            <a href="{{ submit.get_absolute_url }}" class="bg-red-600 w-8 h-8 flex items-center justify-center rounded-md" data-tippy-content="{{ submit.status_pretty }}">
                                 <iconify-icon icon="feather-x"></iconify-icon>
                             </a>
                             {% endif %}

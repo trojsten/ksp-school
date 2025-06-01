@@ -13,7 +13,7 @@ RUN npm run build && npm run build-js
 CMD ["npm", "run", "dev"]
 
 # Django container
-FROM python:3.11-slim-bullseye AS base
+FROM python:3.13-slim-bullseye AS base
 WORKDIR /app
 RUN useradd --create-home appuser \
     && chmod 777 /app

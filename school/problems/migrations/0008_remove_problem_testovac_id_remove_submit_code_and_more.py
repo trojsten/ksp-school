@@ -130,11 +130,6 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.RemoveField(model_name="submit", name="protocol"),
-        migrations.AddField(
-            model_name="submit",
-            name="protocol",
-            field=models.JSONField(blank=True, default=dict, verbose_name="protokol"),
-        ),
         migrations.RunPython(migrate, undo),
         migrations.AlterField(
             model_name="problem",

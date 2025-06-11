@@ -4,7 +4,7 @@ from os import path
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
-from judge_client.types import Protocol, SubmitStatus, TestingStatus, Verdict
+from judge_client.types import SubmitStatus, TestingStatus, Verdict
 
 from school.utils import get_extension
 
@@ -100,7 +100,6 @@ class Submit(models.Model):
         upload_to=submit_file_filepath,
         max_length=255,
     )
-    protocol = models.JSONField(blank=True, default=dict, verbose_name="protokol")
 
     status = models.SmallIntegerField(
         choices=JudgeTestingStatus.choices,
@@ -148,10 +147,6 @@ class Submit(models.Model):
     @property
     def language(self) -> str:
         return get_extension(self.program.path)
-
-    @property
-    def protocol_object(self) -> Protocol:
-        return Protocol(**self.protocol)
 
     @property
     def status_pretty(self) -> str:

@@ -9,7 +9,6 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, FormView
-from django_htmx.http import HTMX_STOP_POLLING
 from judge_client.client import JudgeConnectionError
 
 from school.courses.models import LessonItem
@@ -65,25 +64,6 @@ class SubmitDetailView(LoginRequiredMixin, DetailView):
             }
         )
         return ctx
-
-
-class SubmitProtocolView(LoginRequiredMixin, DetailView):
-    template_name = "problems/_protocol.html"
-    pk_url_kwarg = "submit"
-
-    def get_queryset(self):
-        qs = Submit.objects.filter(problem__slug=self.kwargs["problem"])
-        if not self.request.user.is_staff:
-            qs = qs.filter(user=self.request.user)
-        return qs
-
-    def get(self, request, *args, **kwargs):
-        resp = super().get(request, *args, **kwargs)
-
-        submit: Submit = self.get_object()
-        if submit.protocol:
-            resp.status_code = HTMX_STOP_POLLING
-        return resp
 
 
 class SubmitCreateView(LoginRequiredMixin, FormView):
@@ -154,9 +134,8 @@ class UploadProtocolView(View):
         if "testing_status" in json_data:
             submit.testing_status = json_data["testing_status"]
 
-        submit.protocol = json_data["protocol"]
         if "final_verdict" in json_data["protocol"]:
-            submit.result = submit.protocol["final_verdict"]
+            submit.result = json_data["protocol"]["final_verdict"]
 
         submit.save()
 

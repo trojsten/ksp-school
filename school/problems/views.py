@@ -54,11 +54,14 @@ class SubmitDetailView(LoginRequiredMixin, DetailView):
         if url is None:
             url = ""
 
+        submit: Submit = self.get_object()
+
         ctx.update(
             {
                 "back_url": url,
                 "submits": submits,
                 "lesson_item_id": self.request.GET.get("liid", None),
+                "protocol_key": submit.protocol_key,
             }
         )
         return ctx

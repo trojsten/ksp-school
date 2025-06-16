@@ -5,9 +5,9 @@ from school.problems.models import Problem, Submit, Tag
 
 @admin.register(Problem)
 class ProblemAdmin(admin.ModelAdmin):
-    list_display = ["name", "difficulty", "detail_visible", "slug"]
+    list_display = ["name", "difficulty", "slug"]
     search_fields = ["name", "slug"]
-    list_filter = ["difficulty", "detail_visible"]
+    list_filter = ["difficulty"]
 
 
 @admin.register(Tag)

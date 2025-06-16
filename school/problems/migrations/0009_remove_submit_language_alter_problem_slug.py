@@ -13,6 +13,10 @@ class Migration(migrations.Migration):
             model_name="submit",
             name="language",
         ),
+        migrations.RemoveField(
+            model_name="problem",
+            name="detail_visible",
+        ),
         migrations.AlterField(
             model_name="problem",
             name="slug",

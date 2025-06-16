@@ -16,7 +16,6 @@ class ImportProblemsView(ImportView):
                     "difficulty": meta.get(
                         "difficulty", Problem.ProblemDifficulty.UNKNOWN
                     ),
-                    "detail_visible": meta.get("detail_visible", False),
                 },
             )
 

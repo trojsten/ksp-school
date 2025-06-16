@@ -49,9 +49,6 @@ class Problem(models.Model):
         choices=ProblemDifficulty.choices,
         default=ProblemDifficulty.UNKNOWN,
     )
-    detail_visible = models.BooleanField(
-        verbose_name="viditeľnosť detailov testovania", default=False
-    )
     judge_namespace = models.CharField(
         verbose_name="namespace v ktorom je úloha v Judgi",
         max_length=128,

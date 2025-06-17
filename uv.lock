@@ -316,7 +316,7 @@ wheels = [
 [[package]]
 name = "judge-client"
 version = "2.0.0"
-source = { git = "https://github.com/trojsten/judge-client#e4af083ce8024dd9bae85215fb8deaab6b9f3e84" }
+source = { git = "https://github.com/trojsten/judge-client#9254856a1cb28f0cf9c9dfc25ac328e64b525395" }
 dependencies = [
     { name = "pydantic" },
     { name = "requests" },

@@ -9,7 +9,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, FormView
-from judge_client.client import JudgeConnectionError
+from judge_client.exceptions import JudgeConnectionError, UnknownLanguageError
 
 from school.courses.models import LessonItem
 from school.problems import forms
@@ -69,6 +69,7 @@ class SubmitDetailView(LoginRequiredMixin, DetailView):
 class SubmitCreateView(LoginRequiredMixin, FormView):
     http_method_names = ["post"]
     form_class = forms.SubmitForm
+    template_name = "problems/submit_error.html"
 
     def dispatch(self, request, *args, **kwargs):
         self.problem = get_object_or_404(Problem, slug=kwargs["problem"])
@@ -97,9 +98,12 @@ class SubmitCreateView(LoginRequiredMixin, FormView):
             )
             submit.public_id = judge_submit.public_id
             submit.protocol_key = judge_submit.protocol_key
+        except UnknownLanguageError:
+            form.add_error("file", "Nepodporovaný jazyk programu.")
+            return self.form_invalid(form)
         except JudgeConnectionError:
             submit.result = "CONNERR"
-            submit.save()
+
         submit.save()
 
         url = reverse("submit_detail", args=[self.problem.slug, submit.id])
@@ -107,9 +111,42 @@ class SubmitCreateView(LoginRequiredMixin, FormView):
             url += f"?liid={self.item.id}"
         return HttpResponseRedirect(url)
 
-    def form_invalid(self, form):
-        # TODO: Redirect back.
-        return JsonResponse(form.errors)
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        submits = Submit.objects.filter(
+            problem__slug=self.kwargs["problem"], user=self.request.user
+        ).select_related("lesson_item__lesson__course")
+
+        url = None
+        if "liid" in self.request.GET:
+            item = get_object_or_404(
+                LessonItem,
+                id=self.request.GET["liid"],
+                problem__slug=self.kwargs["problem"],
+            )
+            submits = submits.filter(lesson_item=item)
+            url = reverse(
+                "lesson",
+                kwargs={
+                    "course": item.lesson.course.slug,
+                    "lesson": item.lesson.slug,
+                    "item": item.slug,
+                },
+            )
+
+        if url is None:
+            url = ""
+
+        ctx.update(
+            {
+                "back_url": url,
+                "submits": submits,
+                "problem": self.problem,
+                "lesson_item_id": self.request.GET.get("liid", None),
+            }
+        )
+
+        return ctx
 
 
 @method_decorator(csrf_exempt, name="dispatch")

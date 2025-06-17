@@ -1,0 +1,34 @@
+{% extends 'common/base.html' %}
+{% load submits %}
+
+{% block title %}Odovzdanie {{ block.super }}{% endblock %}
+
+{% block body_class %}min-h-screen flex flex-col{% endblock %}
+
+{% block body %}
+
+<div class="p-8">
+    <a href="{{ back_url }}" class="btn mb-6">
+        <i data-feather="arrow-left" class="h-4 w-4"></i>
+        Späť
+    </a>
+    {% if form.errors %}
+        <div class="bg-red-700 text-red-100 p-4 rounded-xl mb-6">
+            <h2 class="text-lg font-bold">Chyby pri odovzdávaní:</h2>
+            <ul class="list-disc pl-5">
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <h2 class="text-white font-bold text-2xl mb-4 mt-12">Odovzdávanie programu</h2>
+    {% submit_form problem lesson_item_id=lesson_item_id %}
+
+    <h2 class="text-white font-bold text-2xl mt-12 mb-4">Posledné submity</h2>
+    {% submit_list submits lesson_item_id=lesson_item_id %}
+</div>
+{% endblock %}

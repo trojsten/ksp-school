@@ -2,7 +2,7 @@ from django import template
 from django.utils.safestring import mark_safe
 from markdown import markdown
 
-from school.pages.markdown_extensions import *
+from school.pages.markdown_extensions import KspSchoolExtension
 
 register = template.Library()
 

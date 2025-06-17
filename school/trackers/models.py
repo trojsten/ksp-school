@@ -12,14 +12,16 @@ class TrackerState(enum.Enum):
 
 
 class Tracker(models.Model):
-    class Meta:
-        abstract = True
-
+    id: int
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="+"
     )
+    user_id: int
     started_at = models.DateTimeField(auto_now_add=True)
     completed_at = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        abstract = True
 
     @property
     def state(self) -> TrackerState:
@@ -27,16 +29,20 @@ class Tracker(models.Model):
 
 
 class LessonItemTracker(Tracker):
-    class Meta:
+    lesson_item = models.ForeignKey(
+        "courses.LessonItem", on_delete=models.CASCADE, related_name="+"
+    )
+    lesson_item_id: int
+
+    class Meta(Tracker.Meta):
         constraints = [
             UniqueConstraint(
                 fields=["lesson_item", "user"], name="tracker_item_user_unique"
             )
         ]
 
-    lesson_item = models.ForeignKey(
-        "courses.LessonItem", on_delete=models.CASCADE, related_name="+"
-    )
+    def __str__(self):
+        return f"{self.lesson_item} tracker for {self.user}"
 
     @property
     def state(self) -> TrackerState:
@@ -47,19 +53,23 @@ class LessonItemTracker(Tracker):
 
 
 class LessonTracker(Tracker):
-    class Meta:
+    lesson = models.ForeignKey(
+        "courses.Lesson", on_delete=models.CASCADE, related_name="+"
+    )
+    lesson_id: int
+    total = models.IntegerField()
+    completed = models.IntegerField(default=0)
+    fastforward = models.BooleanField(default=False)
+
+    class Meta(Tracker.Meta):
         constraints = [
             UniqueConstraint(
                 fields=["lesson", "user"], name="tracker_lesson_user_unique"
             )
         ]
 
-    lesson = models.ForeignKey(
-        "courses.Lesson", on_delete=models.CASCADE, related_name="+"
-    )
-    total = models.IntegerField()
-    completed = models.IntegerField(default=0)
-    fastforward = models.BooleanField(default=False)
+    def __str__(self):
+        return f"{self.lesson} tracker for {self.user}"
 
     @property
     def state(self) -> TrackerState:
@@ -73,18 +83,22 @@ class LessonTracker(Tracker):
 
 
 class CourseTracker(Tracker):
-    class Meta:
+    course = models.ForeignKey(
+        "courses.Course", on_delete=models.CASCADE, related_name="+"
+    )
+    course_id: int
+    total = models.IntegerField()
+    completed = models.IntegerField(default=0)
+
+    class Meta(Tracker.Meta):
         constraints = [
             UniqueConstraint(
                 fields=["course", "user"], name="tracker_course_user_unique"
             )
         ]
 
-    course = models.ForeignKey(
-        "courses.Course", on_delete=models.CASCADE, related_name="+"
-    )
-    total = models.IntegerField()
-    completed = models.IntegerField(default=0)
+    def __str__(self):
+        return f"{self.course} tracker for {self.user}"
 
     @property
     def state(self) -> TrackerState:

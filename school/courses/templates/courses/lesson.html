@@ -110,7 +110,7 @@
                         {% submit_form item.problem lesson_item_id=item.id %}
 
                         {% if user.is_staff %}
-                            <a href="{% url 'admin:problems_submit_changelist' %}?problem__testovac_id={{ item.problem.testovac_id }}" class="btn mt-10">
+                            <a href="{% url 'admin:problems_submit_changelist' %}?problem__slug={{ item.problem.slug }}" class="btn mt-10">
                                 <i data-feather="list" class="h-4"></i>
                                 Zobraz všetky submity
                             </a>

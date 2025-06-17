@@ -1,14 +1,9 @@
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models import UniqueConstraint
 
 
 class Course(models.Model):
-    class Meta:
-        verbose_name = "kurz"
-        verbose_name_plural = "kurzy"
-        ordering = ["order"]
+    id: int
 
     name = models.CharField(max_length=64)
     order = models.IntegerField(default=0)
@@ -18,25 +13,42 @@ class Course(models.Model):
     description = models.TextField(blank=True)
     recommended_courses = models.ManyToManyField("Course", blank=True)
 
+    class Meta:
+        verbose_name = "kurz"
+        verbose_name_plural = "kurzy"
+        ordering = ["order"]
+
     def __str__(self):
         return self.name
 
 
 class CourseGroup(models.Model):
-    class Meta:
-        verbose_name = "skupina kurzov"
-        verbose_name_plural = "skupiny kurzov"
-        ordering = ["order"]
+    id: int
 
     name = models.CharField(max_length=64)
     order = models.IntegerField()
     courses = models.ManyToManyField(Course, blank=True)
+
+    class Meta:
+        verbose_name = "skupina kurzov"
+        verbose_name_plural = "skupiny kurzov"
+        ordering = ["order"]
 
     def __str__(self):
         return self.name
 
 
 class Lesson(models.Model):
+    id: int
+
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course_id: int
+
+    name = models.CharField(max_length=64)
+    slug = models.SlugField()
+    layer = models.IntegerField()
+    order = models.IntegerField()
+
     class Meta:
         verbose_name = "lekcia"
         verbose_name_plural = "lekcie"
@@ -44,12 +56,6 @@ class Lesson(models.Model):
             UniqueConstraint(fields=["course", "slug"], name="unique_course_slug"),
         ]
         ordering = ["layer", "order"]
-
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    name = models.CharField(max_length=64)
-    slug = models.SlugField()
-    layer = models.IntegerField()
-    order = models.IntegerField()
 
     def __str__(self):
         return self.name
@@ -65,28 +71,26 @@ class Lesson(models.Model):
 
 
 class LessonMaterial(models.Model):
-    class Meta:
-        verbose_name = "učebný text"
-        verbose_name_plural = "učebné texty"
+    id: int
 
     name = models.CharField(max_length=64)
     material_id = models.SlugField(unique=True)
     content = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name = "učebný text"
+        verbose_name_plural = "učebné texty"
 
     def __str__(self):
         return self.name
 
 
 class LessonItem(models.Model):
-    class Meta:
-        verbose_name = "časť lekcie"
-        verbose_name_plural = "časti lekcie"
-        constraints = [
-            UniqueConstraint(fields=["lesson", "slug"], name="unique_lesson_slug"),
-        ]
-        ordering = ["order"]
+    id: int
 
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    lesson_id: int
+
     order = models.IntegerField()
     slug = models.SlugField(max_length=64)
 
@@ -96,6 +100,14 @@ class LessonItem(models.Model):
     problem = models.ForeignKey(
         "problems.Problem", on_delete=models.CASCADE, blank=True, null=True
     )
+
+    class Meta:
+        verbose_name = "časť lekcie"
+        verbose_name_plural = "časti lekcie"
+        constraints = [
+            UniqueConstraint(fields=["lesson", "slug"], name="unique_lesson_slug"),
+        ]
+        ordering = ["order"]
 
     def __str__(self):
         return self.name

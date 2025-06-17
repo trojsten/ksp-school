@@ -1,33 +1,26 @@
 # Frontend builder
-FROM node:20-alpine AS frontend-build
+FROM node:23-alpine AS frontend-build
 
 WORKDIR /app
 
-COPY package.json package-lock.json /app/
-RUN npm install
+COPY package.json pnpm-lock.yaml ./
+RUN npm install -g pnpm && \
+    pnpm install
 
 COPY school ./school
 COPY css ./css
 COPY tailwind.config.js ./tailwind.config.js
-RUN npm run build && npm run build-js
-CMD ["npm", "run", "dev"]
+RUN pnpm run build && pnpm run build-js
+CMD ["pnpm", "run", "dev"]
 
 # Django container
-FROM python:3.11-slim-bullseye AS base
-WORKDIR /app
-RUN useradd --create-home appuser \
-    && chmod 777 /app
+FROM ghcr.io/trojsten/django-docker:v6 AS base
 
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PATH=/home/appuser/.local/bin:$PATH
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen
 
-USER appuser
+COPY --chown=appuser:appuser ./ /app
+COPY --chown=appuser:appuser --from=frontend-build /app/school/static/app.css /app/school/static/bundle.css /app/school/static/bundle.js /app/school/static/
 
-RUN pip install --upgrade pipenv
-COPY Pipfile Pipfile.lock ./
-RUN pipenv install --system --deploy
-
-COPY --chown=appuser:appuser . /app/
-COPY --from=frontend-build /app/school/static/app.css /app/school/static/bundle.css /app/school/static/bundle.js /app/school/static/
-CMD ["/app/entrypoint.sh"]
+RUN /app/docker/build.sh
+ENV BASE_START=/app/docker/start.sh

@@ -1,8 +1,8 @@
 from itertools import groupby
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import Http404, HttpResponseNotFound
-from django.shortcuts import get_object_or_404, redirect, render
+from django.http import Http404
+from django.shortcuts import get_object_or_404, redirect
 from django.views import View
 from django.views.generic import DetailView, ListView, TemplateView
 
@@ -13,7 +13,7 @@ from school.trackers.helpers import (
     get_items_with_trackers,
     get_lessons_with_trackers,
 )
-from school.trackers.models import LessonTracker, TrackerState
+from school.trackers.models import TrackerState
 from school.trackers.utils import get_or_create_trackers, mark_completed
 
 

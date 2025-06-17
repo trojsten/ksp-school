@@ -6,8 +6,7 @@ from django.views.generic import DetailView, FormView, TemplateView
 from school.classrooms.forms import JoinForm
 from school.classrooms.models import Classroom, ClassroomUser
 from school.classrooms.results import get_course_results
-from school.courses.models import Course, LessonItem
-from school.problems.models import Submit
+from school.courses.models import Course
 from school.users.models import User
 
 

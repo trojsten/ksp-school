@@ -4,6 +4,6 @@ node_modules
 .github
 .git
 .env
+.venv
 .ruff_cache
 /uploads/
-/static/

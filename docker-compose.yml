@@ -1,8 +1,6 @@
-version: "3.4"
-
 services:
   db:
-    image: postgres:14-alpine
+    image: postgres:17-alpine
     environment:
       - POSTGRES_USER=school
       - POSTGRES_PASSWORD=school
@@ -16,15 +14,16 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./:/app/
+      - ./school:/app/school
+      - ./uploads:/app/uploads
     depends_on:
       - db
     environment:
       - DEBUG=True
-      - DATABASE_URL=psql://school:school@db/school
+      - DATABASE_URL=postgres://school:school@db/school
     env_file:
       - .env
-    command: "./entrypoint.sh dev"
+    command: "/app/docker/start.sh dev"
 
   tailwind:
     build:

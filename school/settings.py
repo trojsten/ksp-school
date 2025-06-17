@@ -115,27 +115,30 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.0/howto/static-files/
+# https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = "/static/"
+STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "static"
 STATICFILES_DIRS = [BASE_DIR / "school" / "static"]
 
-DEFAULT_FILE_STORAGE = "school.storages.OverwriteFileSystemStorage"
-MEDIA_ROOT = BASE_DIR / "media"
-MEDIA_URL = "/media/"
+STORAGES = {
+    "default": {"BACKEND": "school.storages.OverwriteFileSystemStorage"},
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+MEDIA_URL = "uploads/"
+MEDIA_ROOT = BASE_DIR / "uploads"
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
+# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 SCHOOL_IMPORT_TOKEN = env("SCHOOL_IMPORT_TOKEN")
-TESTOVAC_CLIENT = env("TESTOVAC_CLIENT", default="KSP-SCHOOL")
-TESTOVAC_HOST = env("TESTOVAC_HOST", default="experiment")
-TESTOVAC_PORT = env("TESTOVAC_PORT", default=12347)
-TESTOVAC_TOKEN = env("TESTOVAC_TOKEN", default="")
+JUDGE_TOKEN = env("JUDGE_TOKEN", default="")
+JUDGE_URL = env("JUDGE_URL", default="https://judge.ksp.sk")
 
 
 if DEBUG:

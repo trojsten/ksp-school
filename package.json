@@ -1,26 +1,20 @@
 {
   "name": "ksp-school",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
-    "dev": "tailwindcss -i ./css/tailwind.css -o ./school/static/app.css --watch",
-    "build": "tailwindcss -i ./css/tailwind.css -o ./school/static/app.css --minify",
+    "dev": "npx @tailwindcss/cli -i ./css/tailwind.css -o ./school/static/app.css --watch",
+    "build": "npx @tailwindcss/cli -i ./css/tailwind.css -o ./school/static/app.css --minify",
     "build-js": "esbuild school/bundle.js --bundle --minify --outfile=./school/static/bundle.js"
   },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@tailwindcss/typography": "^0.5.9",
-    "tailwindcss": "^3.3.3"
-  },
   "dependencies": {
-    "@tailwindcss/forms": "^0.5.6",
-    "alpinejs": "^3.13.0",
-    "esbuild": "^0.19.4",
-    "feather-icons": "^4.29.0",
-    "htmx.org": "^1.9.6",
+    "@tailwindcss/cli": "^4.1.6",
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.16",
+    "alpinejs": "^3.14.9",
+    "esbuild": "^0.19.12",
+    "feather-icons": "^4.29.2",
+    "htmx.org": "^1.9.12",
     "iconify-icon": "^1.0.8",
+    "tailwindcss": "^4.1.6",
     "tippy.js": "^6.3.7"
   }
 }

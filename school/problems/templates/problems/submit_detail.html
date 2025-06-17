@@ -24,7 +24,11 @@
         </a>
 
         <h1 class="text-white font-bold text-3xl mb-6">Protokol testovania</h1>
-        <judge-embed-protocol protocol-key="{{ protocol_key }}" theme="dark"></judge-embed-protocol>
+        {% if protocol_key %}
+            <judge-embed-protocol protocol-key="{{ protocol_key }}" theme="dark"></judge-embed-protocol>
+        {% else %}
+            <div class="bg-red-700 text-red-100 p-4 rounded-xl">Protokol testovania nie je dostupný.</div>
+        {% endif %}
 
         <h2 class="text-white font-bold text-2xl mb-4 mt-12">Odovzdávanie programu</h2>
         {% submit_form submit.problem lesson_item_id=lesson_item_id %}

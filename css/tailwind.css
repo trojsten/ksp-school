@@ -11,16 +11,19 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
-  }
+
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentcolor);
+    }
 }
 
-[x-cloak] { display: none; }
+[x-cloak] {
+    display: none;
+}
 
 .codehilite {
     background: none !important;
@@ -36,13 +39,15 @@
 
 /** I/O table in problem statements **/
 .io {
-    @apply grid grid-cols-1 sm:grid-cols-2 gap-x-4;
+    @apply grid grid-cols-1 sm:grid-cols-2 gap-4 my-5;
 }
+
 .io h3 {
     @apply mt-0;
 }
+
 .io pre {
-    @apply mt-0;
+    @apply m-0;
 }
 
 .input {

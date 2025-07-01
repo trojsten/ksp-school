@@ -33,7 +33,7 @@ dev = [
 select = ["E4", "E7", "E9", "F", "I", "N", "DJ", "T20", "Q"]
 
 [tool.bumpver]
-current_version = "2025.4"
+current_version = "2025.5"
 version_pattern = "YYYY.INC1"
 commit_message = "bump version {old_version} -> {new_version}"
 tag_message = "{new_version}"

@@ -18,5 +18,5 @@ class TagAdmin(admin.ModelAdmin):
 @admin.register(Submit)
 class SubmitAdmin(admin.ModelAdmin):
     list_display = ["problem", "user", "result", "created_at"]
-    search_fields = ["problem__name", "user__username"]
+    search_fields = ["problem__name", "user__username", "public_id"]
     list_filter = ["result", "problem__slug"]

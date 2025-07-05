@@ -12,6 +12,7 @@ class ImportProblemsView(ImportView):
                 slug=name,
                 defaults={
                     "name": meta.get("name", "???"),
+                    "judge_task": name,
                     "content": body,
                     "difficulty": meta.get(
                         "difficulty", Problem.ProblemDifficulty.UNKNOWN

@@ -5,10 +5,10 @@ class ClassroomQuerySet(models.QuerySet):
     def for_user(self, user, teacher_required=False):
         if user.is_superuser:
             return self
-        qs = self.filter(classroomuser__user=user)
+        classroomuser_objects = ClassroomUser.objects.filter(user=user)
         if teacher_required:
-            qs = qs.filter(classroomuser__is_teacher=True)
-        return qs
+            classroomuser_objects = classroomuser_objects.filter(is_teacher=True)
+        return self.filter(id__in=classroomuser_objects.values("classroom"))
 
 
 class Classroom(models.Model):

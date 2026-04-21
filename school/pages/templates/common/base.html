@@ -34,6 +34,10 @@
         </a>
         {% endif %}
 
+        <a href="{% url 'problem_list' %}" class="text-white hover:text-gray-300">
+            Úlohy
+        </a>
+
         <div class="ml-auto text-sm">
             {% if user.is_authenticated %}
             <div class="relative select-none" x-data="{ open: false }">

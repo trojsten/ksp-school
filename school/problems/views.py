@@ -1,20 +1,152 @@
 import json
+from typing import Any
 
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Exists, OuterRef, Q
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.decorators import method_decorator
+from django.utils.functional import cached_property
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import DetailView, FormView
+from django.views.generic import DetailView, FormView, ListView
+from django.views.generic.base import ContextMixin
 from judge_client.exceptions import JudgeConnectionError, UnknownLanguageError
 
 from school.courses.models import LessonItem
 from school.problems import forms
 from school.problems.models import Problem, Submit
 from school.problems.utils import enqueue_judge_submit
+from school.trackers.models import LessonItemTracker
+
+
+class TagMixin(ContextMixin, View):
+    @cached_property
+    def tags(self):
+        raise NotImplementedError()
+
+    def get_active_tags(self):
+        return set(self.request.GET.getlist("tags"))
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context.update(
+            {
+                "tags": self.tags,
+                "active_tags": self.get_active_tags(),
+            }
+        )
+        return context
+
+
+class ProblemListView(TagMixin, ListView):
+    template_name = "problems/problem_list.html"
+    context_object_name = "problems"
+
+    def get_queryset(self):
+        qs = Problem.objects.all().prefetch_related("tags")
+
+        if self.request.user.is_authenticated:
+            qs = qs.annotate(
+                completed=Exists(
+                    LessonItemTracker.objects.filter(
+                        user=self.request.user,
+                        lesson_item__problem_id=OuterRef("id"),
+                        completed_at__isnull=False,
+                    )
+                )
+            )
+
+        if query := self.request.GET.get("q"):
+            qs = qs.filter(Q(name__icontains=query) | Q(tags__name__in=query.split()))
+
+        if active_tags := self.get_active_tags():
+            qs = qs.filter(tags__name__in=active_tags)
+
+        if self.active_difficulty:
+            qs = qs.filter(difficulty=self.active_difficulty)
+
+        if self.active_state:
+            qs = qs.filter(completed=self.active_state == "completed")
+
+        return qs.order_by("name").distinct()
+
+    @cached_property
+    def tags(self):
+        return (
+            Problem.objects.values_list("tags__name", flat=True)
+            .order_by("tags__name")
+            .distinct()
+        )
+
+    @cached_property
+    def active_difficulty(self):
+        return self.request.GET.get("difficulty")
+
+    @cached_property
+    def active_state(self):
+        return self.request.GET.get("state")
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        ctx = super().get_context_data(**kwargs)
+
+        ctx["active_difficulty"] = self.active_difficulty
+        ctx["difficulties"] = {
+            "easy": (
+                "easy" if self.active_difficulty != "easy" else "",
+                "bg-green-700" if self.active_difficulty == "easy" else "bg-green-900",
+                "Úloha by mala byť zvládnuteľná bez väčších problémov.",
+            ),
+            "medium": (
+                "medium" if self.active_difficulty != "medium" else "",
+                "bg-orange-700"
+                if self.active_difficulty == "medium"
+                else "bg-orange-900",
+                "Úloha nemusí mať úplne priamočiare riešenie.",
+            ),
+            "hard": (
+                "hard" if self.active_difficulty != "hard" else "",
+                "bg-red-700" if self.active_difficulty == "hard" else "bg-red-900",
+                "Úloha vyžaduje pokročilé vedomosti z iných kurzov.",
+            ),
+        }
+        ctx["active_state"] = self.active_state
+        ctx["states"] = {
+            "Nedokončená": (
+                "started" if self.active_state != "started" else "",
+                "bg-orange-700" if self.active_state == "started" else "bg-orange-900",
+                "Nezačatá alebo nedokončená úloha.",
+            ),
+            "Dokončená": (
+                "completed" if self.active_state != "completed" else "",
+                "bg-green-700" if self.active_state == "completed" else "bg-green-900",
+                "Dokončená úloha.",
+            ),
+        }
+
+        return ctx
+
+
+class ProblemDetailView(DetailView):
+    template_name = "problems/problem_detail.html"
+    context_object_name = "problem"
+    slug_url_kwarg = "problem"
+
+    def get_queryset(self):
+        return Problem.objects.prefetch_related("tags")
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        ctx = super().get_context_data(**kwargs)
+
+        if self.request.user.is_authenticated:
+            ctx["submits"] = Submit.objects.filter(
+                problem=self.get_object(),
+                user=self.request.user,
+            )
+
+        return ctx
 
 
 class SubmitDetailView(LoginRequiredMixin, DetailView):

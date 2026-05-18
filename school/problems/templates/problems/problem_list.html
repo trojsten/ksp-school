@@ -49,15 +49,17 @@
                     </a>
                 {% endfor %}
             </div>
-            <h3 class="font-semibold my-2">Stav:</h3>
-            <div class="flex flex-wrap gap-1 mb-2">
-                {% for name, d in states.items %}
-                    <a href="{% querystring state=d.0 %}" class="{{ d.1 }} text-gray-100 rounded-md px-2 py-1"
-                      data-tippy-content="{{ d.2 }}">
-                        {{ name }}
-                    </a>
-                {% endfor %}
-            </div>
+            {% if user_authenticated %}
+                <h3 class="font-semibold my-2">Stav:</h3>
+                <div class="flex flex-wrap gap-1 mb-2">
+                    {% for name, d in states.items %}
+                        <a href="{% querystring state=d.0 %}" class="{{ d.1 }} text-gray-100 rounded-md px-2 py-1"
+                          data-tippy-content="{{ d.2 }}">
+                            {{ name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </details>
 
         <div class="overflow-x-auto rounded-md">

@@ -68,7 +68,7 @@ class ProblemListView(TagMixin, ListView):
         if self.active_difficulty:
             qs = qs.filter(difficulty=self.active_difficulty)
 
-        if self.active_state:
+        if self.active_state and self.request.user.is_authenticated:
             qs = qs.filter(completed=self.active_state == "completed")
 
         return qs.order_by("name").distinct()
@@ -91,6 +91,8 @@ class ProblemListView(TagMixin, ListView):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         ctx = super().get_context_data(**kwargs)
+
+        ctx["user_authenticated"] = self.request.user.is_authenticated
 
         ctx["active_difficulty"] = self.active_difficulty
         ctx["difficulties"] = {

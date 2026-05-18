@@ -1,0 +1,113 @@
+{% extends 'common/base.html' %}
+{% load markdownify tags %}
+
+{% block title %}Zoznam úloh {{ block.super }}{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto py-10 lg:py-16 px-6 lg:items-center">
+        <div class="lg:max-w-lg mb-16">
+            <h1 class="tracking-tight text-3xl text-white font-bold lg:text-5xl">Zoznam úloh</h1>
+            <p class="mt-6 text-gray-400">
+                Na tejto stránke sa nachádza zoznam všetkých úloh.
+                Ak ešte nemáš absolvované aspoň
+                <a class="text-blue-300 hover:text-blue-400 underline" href="{% url "course_list" %}">základné kurzy</a>,
+                silno ti odporúčame si prejsť najskôr tie.
+            </p>
+        </div>
+
+        <form class="flex mb-4 gap-2">
+            <input type="search" name="q" placeholder="Hľadaj..." class="input" autofocus
+                   value="{{ request.GET.q }}">
+            {% for key, values in request.GET.lists %}
+                {% if key != 'q' %}
+                    {% for value in values %}
+                        <input type="hidden" name="{{ key }}" value="{{ value }}">
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary">Hľadať</button>
+        </form>
+
+        <details class="mb-6 text-gray-100 bg-gray-800 px-4 py-2 rounded-md" {% if active_tags or active_difficulty or active_state %}open{% endif %}>
+            <summary class="select-none cursor-pointer">Filtre</summary>
+            <h3 class="font-semibold my-2">Tagy:</h3>
+            <div class="flex flex-wrap gap-1 mb-4">
+                {% for tag in tags %}
+                    <a href="{% tagquery "tags" active_tags tag %}"
+                       class="rounded-md px-2 py-1 {% if tag in active_tags %}bg-blue-600{% else %}bg-blue-900{% endif %}">
+                        {{ tag }}
+                    </a>
+                {% endfor %}
+            </div>
+            <h3 class="font-semibold my-2">Náročnosť:</h3>
+            <div class="flex flex-wrap gap-1 mb-4">
+                {% for name, d in difficulties.items %}
+                    <a href="{% querystring difficulty=d.0 %}" class="{{ d.1 }} text-gray-100 rounded-md px-2 py-1"
+                      data-tippy-content="{{ d.2 }}">
+                        {{ name }}
+                    </a>
+                {% endfor %}
+            </div>
+            <h3 class="font-semibold my-2">Stav:</h3>
+            <div class="flex flex-wrap gap-1 mb-2">
+                {% for name, d in states.items %}
+                    <a href="{% querystring state=d.0 %}" class="{{ d.1 }} text-gray-100 rounded-md px-2 py-1"
+                      data-tippy-content="{{ d.2 }}">
+                        {{ name }}
+                    </a>
+                {% endfor %}
+            </div>
+        </details>
+
+        <div class="overflow-x-auto rounded-md">
+            <table class="min-w-full text-left text-sm">
+                <tbody class="divide-y divide-gray-800">
+                    {% for problem in object_list %}
+                        <tr class="relative bg-gray-900 hover:bg-gray-800 {% if problem.completed %}bg-green-950{% endif %} rounded-md">
+                            <td class="px-4 py-3 text-gray-100">
+                                {{ problem.name|markdownify }}
+                                <a href="{% url "problem_detail" problem.slug %}" class="absolute inset-0 z-0"></a>
+                            </td>
+
+                            <td class="px-4 py-3">
+                                {% if problem.difficulty == problem.ProblemDifficulty.EASY %}
+                                    <span class="bg-green-900 text-gray-100 rounded-md px-2 py-1"
+                                          data-tippy-content="Úloha by mala byť zvládnuteľná bez väčších problémov.">
+                                      easy
+                                    </span>
+                                {% elif problem.difficulty == problem.ProblemDifficulty.MEDIUM %}
+                                    <span class="bg-orange-900 text-gray-100 rounded-md px-2 py-1"
+                                          data-tippy-content="Úloha nemusí mať úplne priamočiare riešenie.">
+                                      medium
+                                    </span>
+                                {% elif problem.difficulty == problem.ProblemDifficulty.HARD %}
+                                    <span class="bg-red-900 text-gray-100 rounded-md px-2 py-1"
+                                          data-tippy-content="Úloha vyžaduje pokročilé vedomosti z iných kurzov.">
+                                      hard
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                            <td class="px-4 py-3">
+                                <div class="flex flex-wrap gap-2">
+                                    {% for tag in problem.tags.all %}
+                                        <span class="bg-blue-900 text-gray-100 rounded-md px-2 py-1">
+                                          {{ tag }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            </td>
+
+                            <td class="px-4 py-3 w-0">
+                                {% if problem.completed %}
+                                    <i data-feather="check" class="w-4 h-4 text-green-500"></i>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

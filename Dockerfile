@@ -1,11 +1,11 @@
 # Frontend builder
-FROM node:23-alpine AS frontend-build
+FROM node:lts-alpine AS frontend-build
 
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
 RUN npm install -g pnpm && \
-    pnpm install
+    pnpm install --ignore-scripts --frozen-lockfile
 
 COPY school ./school
 COPY css ./css

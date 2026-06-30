@@ -1,0 +1,13 @@
+{% load markdownify tags %}
+
+<div class="mb-5 not-prose">
+    <b>Tagy: </b>
+    {% for tag in problem.tags.all %}
+        {% render_tag tag %}
+    {% endfor %}
+</div>
+<div class="mb-5 not-prose">
+    <b>Obtiažnosť:</b>
+    {% render_tag problem.difficulty is_difficulty=True %}
+</div>
+{{ problem.content|markdownify }}

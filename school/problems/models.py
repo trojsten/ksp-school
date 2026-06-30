@@ -75,6 +75,10 @@ class Problem(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def difficulty_tag(self):
+        return self.ProblemDifficulty(self.difficulty)
+
 
 class Submit(models.Model):
     class JudgeTestingStatus(models.IntegerChoices):

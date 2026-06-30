@@ -8,6 +8,6 @@
 </div>
 <div class="mb-5 not-prose">
     <b>Obtiažnosť:</b>
-    {% render_tag problem.difficulty is_difficulty=True %}
+    {% render_tag problem.difficulty_tag %}
 </div>
 {{ problem.content|markdownify }}

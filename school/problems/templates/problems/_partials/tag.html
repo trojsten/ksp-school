@@ -1,7 +1,15 @@
+{% if link %}
 <a
+    href="{{ link }}"
+{% else %}
+<span
+{% endif %}
     class="{{ background }} text-gray-100 rounded-md px-2 py-1 m-1"
-    {% if link %} href="{{ link }}"{% endif %}
     {% if tooltip %} data-tippy-content="{{ tooltip}}"{% endif %}
 >
     {{ tag }}
+{% if link %}
 </a>
+{% else %}
+</span>
+{% endif %}

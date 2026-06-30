@@ -30,10 +30,12 @@ class Tag(models.Model):
 
 class Problem(models.Model):
     class ProblemDifficulty(models.TextChoices):
-        EASY = "easy", "easy"
-        MEDIUM = "medium", "medium"
-        HARD = "hard", "hard"
-        UNKNOWN = "unknown", "unknown"
+        BASICS = "basics", "základy"
+        EASY = "easy", "ľahká"
+        MEDIUM = "medium", "stredná"
+        HARD = "hard", "ťažká"
+        VERY_HARD = "very-hard", "veľmi ťažká"
+        UNKNOWN = "unknown", "neznáma"
 
     id: int
 

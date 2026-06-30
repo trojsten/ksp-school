@@ -1,7 +1,6 @@
 {% extends 'common/base.html' %}
 {% load percent %}
 {% load submits %}
-{% load markdownify %}
 
 {% block title %}{{ problem.name }} {{ block.super }}{% endblock %}
 
@@ -11,33 +10,7 @@
     <div class="flex grow flex-col lg:flex-row">
         <div class="grow px-6 py-8">
             <div class="mx-auto prose prose-invert">
-                <div class="mb-5">
-                    <b>Tagy: </b>
-                    {% for tag in problem.tags.all %}
-                        <span class="bg-blue-900 rounded-md p-2 m-1">
-                            {{ tag }}
-                        </span>
-                    {% endfor %}
-                </div>
-                <div class="mb-5">
-                    {% if problem.difficulty == problem.ProblemDifficulty.EASY %}
-                        <b>Obtiažnosť:</b>
-                        <span class="bg-green-900 rounded-md p-2 m-1" data-tippy-content="Úloha by mala byť zvládnuteľná bez väčších problémov.">
-                            easy
-                        </span>
-                    {% elif problem.difficulty == problem.ProblemDifficulty.MEDIUM %}
-                        <b>Obtiažnosť:</b>
-                        <span class="bg-orange-900 rounded-md p-2 m-1" data-tippy-content="Úloha nemusí mať úplne priamočiare riešenie.">
-                            medium
-                        </span>
-                    {% elif problem.difficulty == problem.ProblemDifficulty.HARD %}
-                        <b>Obtiažnosť:</b>
-                        <span class="bg-red-900 rounded-md p-2 m-1" data-tippy-content="Úloha vyžaduje pokročilé vedomosti z iných kurzov.">
-                            hard
-                        </span>
-                    {% endif %}
-                </div>
-                {{ problem.content|markdownify }}
+                {% include "problems/_problem_statement.html" with problem=problem %}
             </div>
         </div>
         <aside class="bg-gray-800 lg:border-l border-b lg:border-b-0 border-gray-600 lg:w-96 xl:w-128 p-6 text-gray-400">

@@ -4,6 +4,7 @@ from typing import Callable, List
 
 import frontmatter
 from django.conf import settings
+from django.db import transaction
 from django.http import HttpRequest, JsonResponse
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -15,6 +16,7 @@ from school.trackers.utils import recalculate_course
 
 @method_decorator(csrf_exempt, name="dispatch")
 class ImportView(View):
+    @transaction.atomic()
     def dispatch(self, request: HttpRequest, *args, **kwargs):
         token = request.headers.get("X-Token", None)
         if token != settings.SCHOOL_IMPORT_TOKEN:

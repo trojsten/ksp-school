@@ -1,7 +1,7 @@
 {% extends 'common/base.html' %}
 {% load static %}
 
-{% block title %}KSP School &ndash; Online výučba programovania{% endblock %}
+{% block title %}KSP School &ndash; Online škola programovania{% endblock %}
 
 {% block meta %}
     <meta name="description"
@@ -14,7 +14,7 @@
             <div class="lg:max-w-lg">
                 <h1 class="tracking-tight text-3xl text-white font-bold lg:text-7xl">Chceš kódiť jak ďábel?</h1>
                 <p class="mt-6 text-gray-400 lg:text-xl">
-                    KSP School obsahuje texty a úlohy,
+                    KSP School obsahuje materiály a úlohy,
                     pomocou ktorých sa naučíš programovať aj ty!
                 </p>
                 <a href="{% url "course_list" %}" class="inline-block px-4 py-2 mt-6 text-xl font-medium text-white bg-blue-600 hover:bg-blue-500 rounded-md">Poďme na to!</a>
@@ -30,26 +30,26 @@
             <div class="w-full lg:w-1/2 text-justify">
                 <h2 class="text-2xl font-bold text-white lg:text-4xl">Učebné materiály</h2>
                 <p class="mt-4">
-                    V KSP School nájdeš množstvo učebných textov o rôznych témach z informatiky,
-                    ktoré posunú tvoju úroveň programovania na ďalší level.
+                    V KSP School nájdeš množstvo učebných textov z rôznych informatický tém,
+                    ktoré ti vysvetlia nielen základy programovania, ale aj algoritmy a dátové štruktúry, ktoré by mal každý správny programátor poznať.
                 </p>
 
                 <div class="mt-8 space-y-6">
                     <div class="relative pl-9">
                         <iconify-icon icon="devicon-plain:python" class="absolute left-1 top-0.5 text-blue-500" width="1.25rem"></iconify-icon>
                         <b class="text-white mr-2">Python</b>
-                        Či už si nikdy neprogramoval/a, alebo máš veci ako lambda funkcie a dedičnosť v malíčku, máme niečo pre každého.
+                        Nemáš s programovaním zatiaľ žiadne skúsenosti? Alebo máš veci ako lambda funkcie a dedičnosť v malíčku? V Pythone sa nájde niečo pre každého.
                     </div>
                     <div class="relative pl-9">
                         <iconify-icon icon="devicon-plain:cplusplus" class="absolute left-1 top-0.5 text-blue-500" width="1.25rem"></iconify-icon>
                         <b class="text-white mr-2">C++</b>
-                        Ak sa ti zdá Python príliš pomalý, alebo jednoduchý, máme tu pre teba kurzy C++.
+                        Ak chceš písať bleskovo rýchle programy, C++ je kompilovaný jazyk, ktorý ti to umožní. Naučíme ťa orientovať sa v ňom a správne ho používať.
                     </div>
                     <div class="relative pl-9">
                         <iconify-icon icon="ph:lightning-fill" class="absolute left-1 top-0.5 text-blue-500" width="1.25rem"></iconify-icon>
                         <b class="text-white mr-2">Algoritmy a dátové štruktúry</b>
-                        Programovací jazyk nie je jediný spôsob, ako zrýchliť program.
-                        Ak sa naučíš dáta správne ukladať a správne s nimi pracovať, budú tvoje programy ešte rýchlejšie.
+                        Žiadny programovací jazyk nie je dostatočne rýchly, pokiaľ ho nepoužívaš s rozumom.
+                        Naučíme ťa dáta ukladať do správnych štruktúr a spracovávať správnymi algoritmami, aby tvoje programy boli čo najefektívnejšie.
                     </div>
                 </div>
             </div>
@@ -65,10 +65,9 @@
             <div class="w-full lg:w-1/2 text-justify">
                 <h2 class="text-2xl font-bold text-white lg:text-4xl">Programátorské úlohy</h2>
                 <p class="mt-4">
-                    Pripravili sme si pre teba aj programátorské úlohy, na ktorých si môžeš otestovať nadobudnuté vedomosti.
-                    Tieto úlohy môžeš riešiť a odovzdávať.
-                    Tvoje riešenia budú po odovzdaní automaticky otestované. Okamžite sa dozvieš,
-                    či sú správne a dostatočne efektívne.
+                    Pripravili sme si pre teba aj programátorské úlohy, na ktorých si môžeš svoje nadobudnuté vedomosti otestovať.
+                    Po prihlásení sa môžeš riešiť a odovzdávať všetky úlohy na stránke.
+                    Riešenia sú automaticky otestované, takže sa okamžite dozvieš, či sú tvoje programy správne a dostatočne efektívne.
                 </p>
             </div>
         </div>
@@ -78,13 +77,14 @@
                 <h2 class="text-2xl font-bold text-white lg:text-4xl">Dlhoročná tradícia</h2>
                 <p class="mt-4 text-justify">
                     KSP School vzniklo v dielňach
-                    <a href="https://www.ksp.sk/" class="text-blue-300 hover:text-blue-400 underline">
+                    <a href="https://www.ksp.sk/" class="text-ksp hover:text-ksp-semi-light underline">
                         Korešpondenčného seminára z programovania.</a>
                     V KSP sa venujeme neformálnemu vzdelávaniu a popularizácii informatiky medzi žiakmi stredných škôl už od roku 1983.
                     V roku 2005 sme spustili náš prvý vzdelávací projekt - Programátorskú liaheň.
                     Novšia verzia Programátorskej liahne bola spustená v roku 2010.
                     Od roku 2015 každé leto organizujeme Letnú školu,
                     kde počas intenzívnych dvoch letných týždňov učíme stredoškolákov programovať.
+                    Najnovšou súčasťou Letnej školy je práve táto online škola programovania - KSP School.
                 </p>
             </div>
             <div class="w-full lg:w-1/2 flex items-center justify-center">

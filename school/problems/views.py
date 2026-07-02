@@ -76,7 +76,8 @@ class ProblemListView(TagMixin, ListView):
     @cached_property
     def tags(self):
         return (
-            Problem.objects.values_list("tags__name", flat=True)
+            Problem.objects.exclude(tags__name__isnull=True)
+            .values_list("tags__name", flat=True)
             .order_by("tags__name")
             .distinct()
         )

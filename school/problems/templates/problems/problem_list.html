@@ -5,13 +5,13 @@
 
 {% block body %}
     <div class="container mx-auto py-10 lg:py-16 px-6 lg:items-center">
-        <div class="lg:max-w-lg mb-16">
+        <div class="lg:max-w-2xl mb-16">
             <h1 class="tracking-tight text-3xl text-white font-bold lg:text-5xl">Zoznam úloh</h1>
             <p class="mt-6 text-gray-400">
                 Na tejto stránke sa nachádza zoznam všetkých úloh.
                 Ak ešte nemáš absolvované aspoň
                 <a class="text-blue-300 hover:text-blue-400 underline" href="{% url "course_list" %}">základné kurzy</a>,
-                silno ti odporúčame si prejsť najskôr tie.
+                silno ti odporúčame prejsť si najskôr tie.
             </p>
         </div>
 
@@ -32,31 +32,38 @@
         <details class="mb-6 text-gray-100 bg-gray-800 px-4 py-2 rounded-md" {% if active_tags or active_difficulty or active_state %}open{% endif %}>
             <summary class="select-none cursor-pointer">Filtre</summary>
             <h3 class="font-semibold my-2">Tagy:</h3>
-            <div class="flex flex-wrap gap-1 mb-4">
+            <div class="flex flex-wrap mb-4">
                 {% for tag in tags %}
-                    <a href="{% tagquery "tags" active_tags tag %}"
-                       class="rounded-md px-2 py-1 {% if tag in active_tags %}bg-blue-600{% else %}bg-blue-900{% endif %}">
-                        {{ tag }}
-                    </a>
+                    {% tagquery "tags" active_tags tag as link %}
+                    {% if tag in active_tags %}
+                        {% render_tag tag link=link highlighted=True %}
+                    {% else %}
+                        {% render_tag tag link=link highlighted=False %}
+                    {% endif %}
                 {% endfor %}
             </div>
             <h3 class="font-semibold my-2">Náročnosť:</h3>
-            <div class="flex flex-wrap gap-1 mb-4">
-                {% for name, d in difficulties.items %}
-                    <a href="{% querystring difficulty=d.0 %}" class="{{ d.1 }} text-gray-100 rounded-md px-2 py-1"
-                      data-tippy-content="{{ d.2 }}">
-                        {{ name }}
-                    </a>
+            <div class="flex flex-wrap mb-4">
+                {% for tag in difficulties %}
+                    {% if tag == active_difficulty %}
+                        {% querystring difficulty="" as link %}
+                        {% render_tag tag link=link highlighted=True %}
+                    {% else %}
+                        {% querystring difficulty=tag as link %}
+                        {% render_tag tag link=link highlighted=False %}
+                    {% endif %}
                 {% endfor %}
             </div>
             {% if user_authenticated %}
                 <h3 class="font-semibold my-2">Stav:</h3>
-                <div class="flex flex-wrap gap-1 mb-2">
-                    {% for name, d in states.items %}
-                        <a href="{% querystring state=d.0 %}" class="{{ d.1 }} text-gray-100 rounded-md px-2 py-1"
-                          data-tippy-content="{{ d.2 }}">
-                            {{ name }}
-                        </a>
+                <div class="flex flex-wrap mb-2">
+                    {% for name, tag, tooltip, background, highlighted_background, highlighted in states %}
+                        {% if highlighted %}
+                            {% querystring state="" as link %}
+                        {% else %}
+                            {% querystring state=tag as link %}
+                        {% endif %}
+                        {% render_tag name link=link tooltip=tooltip background=background highlighted_background=highlighted_background highlighted=highlighted %}
                     {% endfor %}
                 </div>
             {% endif %}
@@ -73,30 +80,13 @@
                             </td>
 
                             <td class="px-4 py-3">
-                                {% if problem.difficulty == problem.ProblemDifficulty.EASY %}
-                                    <span class="bg-green-900 text-gray-100 rounded-md px-2 py-1"
-                                          data-tippy-content="Úloha by mala byť zvládnuteľná bez väčších problémov.">
-                                      easy
-                                    </span>
-                                {% elif problem.difficulty == problem.ProblemDifficulty.MEDIUM %}
-                                    <span class="bg-orange-900 text-gray-100 rounded-md px-2 py-1"
-                                          data-tippy-content="Úloha nemusí mať úplne priamočiare riešenie.">
-                                      medium
-                                    </span>
-                                {% elif problem.difficulty == problem.ProblemDifficulty.HARD %}
-                                    <span class="bg-red-900 text-gray-100 rounded-md px-2 py-1"
-                                          data-tippy-content="Úloha vyžaduje pokročilé vedomosti z iných kurzov.">
-                                      hard
-                                    </span>
-                                {% endif %}
+                                {% render_tag problem.difficulty_tag %}
                             </td>
 
                             <td class="px-4 py-3">
-                                <div class="flex flex-wrap gap-2">
+                                <div class="flex flex-wrap">
                                     {% for tag in problem.tags.all %}
-                                        <span class="bg-blue-900 text-gray-100 rounded-md px-2 py-1">
-                                          {{ tag }}
-                                        </span>
+                                        {% render_tag tag %}
                                     {% endfor %}
                                 </div>
                             </td>

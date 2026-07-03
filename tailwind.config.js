@@ -8,6 +8,10 @@ module.exports = {
         sans: ['Inter', ...defaultTheme.fontFamily.sans],
         mono: ['"Fira Mono"', ...defaultTheme.fontFamily.mono],
       },
+      colors: {
+        'ksp': '#818f3d',
+        'ksp-semi-light': '#9aa564',
+      },
       typography: {
         DEFAULT: {
           css: {

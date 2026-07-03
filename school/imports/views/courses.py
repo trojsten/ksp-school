@@ -91,7 +91,7 @@ class ImportCoursesView(ImportView):
                                 if problem is None:
                                     return JsonResponse(
                                         {
-                                            "errors": f"Problem '{item['material']}' don't exist.'",
+                                            "errors": f"Problem '{item['problem']}' don't exist.'",
                                             "ok": False,
                                         },
                                         status=400,

@@ -76,7 +76,8 @@ class ProblemListView(TagMixin, ListView):
     @cached_property
     def tags(self):
         return (
-            Problem.objects.values_list("tags__name", flat=True)
+            Problem.objects.exclude(tags__name__isnull=True)
+            .values_list("tags__name", flat=True)
             .order_by("tags__name")
             .distinct()
         )
@@ -95,38 +96,26 @@ class ProblemListView(TagMixin, ListView):
         ctx["user_authenticated"] = self.request.user.is_authenticated
 
         ctx["active_difficulty"] = self.active_difficulty
-        ctx["difficulties"] = {
-            "easy": (
-                "easy" if self.active_difficulty != "easy" else "",
-                "bg-green-700" if self.active_difficulty == "easy" else "bg-green-900",
-                "Úloha by mala byť zvládnuteľná bez väčších problémov.",
-            ),
-            "medium": (
-                "medium" if self.active_difficulty != "medium" else "",
-                "bg-orange-700"
-                if self.active_difficulty == "medium"
-                else "bg-orange-900",
-                "Úloha nemusí mať úplne priamočiare riešenie.",
-            ),
-            "hard": (
-                "hard" if self.active_difficulty != "hard" else "",
-                "bg-red-700" if self.active_difficulty == "hard" else "bg-red-900",
-                "Úloha vyžaduje pokročilé vedomosti z iných kurzov.",
-            ),
-        }
+        ctx["difficulties"] = Problem.ProblemDifficulty
         ctx["active_state"] = self.active_state
-        ctx["states"] = {
-            "Nedokončená": (
-                "started" if self.active_state != "started" else "",
-                "bg-orange-700" if self.active_state == "started" else "bg-orange-900",
+        ctx["states"] = [
+            (
+                "Nedokončená",
+                "started",
                 "Nezačatá alebo nedokončená úloha.",
+                "bg-orange-900",
+                "bg-orange-600",
+                self.active_state == "started",
             ),
-            "Dokončená": (
-                "completed" if self.active_state != "completed" else "",
-                "bg-green-700" if self.active_state == "completed" else "bg-green-900",
+            (
+                "Dokončená",
+                "completed",
                 "Dokončená úloha.",
+                "bg-green-900",
+                "bg-green-600",
+                self.active_state == "completed",
             ),
-        }
+        ]
 
         return ctx
 

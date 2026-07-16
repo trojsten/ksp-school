@@ -57,7 +57,7 @@
                 </div>
             </div>
             {% else %}
-                <a href="{% url 'oidc_authentication_init' %}">Prihlásiť sa</a>
+                <a href="{% url 'oidc_authentication_init' %}?next={{ request.path_info|urlencode }}">Prihlásiť sa</a>
             {% endif %}
         </div>
     </nav>

@@ -35,7 +35,7 @@
                 {% endif %}
             {% else %}
                 <div class="w-full rounded-md px-4 py-3 bg-red-900 border border-red-600 text-white">
-                    Ak chceš odovzdať riešenie tejto úlohy, musíš sa najskôr <a href="{% url 'oidc_authentication_init' %}" class="underline hover:text-red-300">prihlásiť</a>.
+                    Ak chceš odovzdať riešenie tejto úlohy, musíš sa najskôr <a href="{% url 'oidc_authentication_init' %}?next={{ request.path_info|urlencode }}" class="underline hover:text-red-300">prihlásiť</a>.
                 </div>
             {% endif %}
         </aside>

@@ -14,7 +14,7 @@ RUN pnpm run build && pnpm run build-js
 CMD ["pnpm", "run", "dev"]
 
 # Django container
-FROM ghcr.io/trojsten/django-docker:v6 AS base
+FROM ghcr.io/trojsten/django-docker:v8 AS base
 
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen

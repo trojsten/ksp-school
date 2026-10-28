@@ -16,6 +16,8 @@ CMD ["pnpm", "run", "dev"]
 # Django container
 FROM ghcr.io/trojsten/django-docker:v8 AS base
 
+COPY ./docker/Caddyfile /base/Caddyfile
+
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen
 

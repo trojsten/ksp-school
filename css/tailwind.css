@@ -53,3 +53,13 @@
 .input {
     @apply block w-full bg-gray-950 text-gray-300 rounded-md border-transparent;
 }
+
+tr.safari-relative-fix {
+    /*
+        Safari doesn't support `position: relative` on `<tr>` elements,
+        but these two properties can be used as an alternative.
+        Source: https://mtsknn.fi/blog/relative-tr-in-safari/
+    */
+    transform: translate(0);
+    clip-path: inset(0);
+}

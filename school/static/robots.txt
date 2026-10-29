@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /*?*tags=
+Disallow: /*?*difficulty=
+Disallow: /*?*state=
+Disallow: /problems/*?*
+Disallow: /admin/

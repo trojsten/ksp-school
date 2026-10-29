@@ -1,0 +1,27 @@
+:8000 {
+    handle /robots.txt {
+        root * /app/static
+        file_server
+    }
+
+    handle_path /static/* {
+        root * /app/static
+        file_server
+    }
+
+    handle_path /uploads/* {
+        root * /app/uploads
+        file_server
+    }
+
+    reverse_proxy 127.0.0.1:8001 {
+        trusted_proxies private_ranges
+
+        @sendfile header X-Sendfile *
+        handle_response @sendfile {
+            root * /
+            rewrite {rp.header.X-Sendfile}
+            file_server
+        }
+    }
+}

@@ -80,7 +80,7 @@
             <table class="min-w-full text-left text-sm">
                 <tbody class="divide-y divide-gray-800">
                     {% for problem in object_list %}
-                        <tr class="relative bg-gray-900 hover:bg-gray-800 {% if problem.completed %}bg-green-950{% endif %} rounded-md">
+                        <tr class="safari-relative-fix bg-gray-900 hover:bg-gray-800 {% if problem.completed %}bg-green-950{% endif %} rounded-md">
                             <td class="px-4 py-3 text-gray-100">
                                 {{ problem.name|markdownify }}
                                 <a href="{% url "problem_detail" problem.slug %}" class="absolute inset-0 z-0"></a>

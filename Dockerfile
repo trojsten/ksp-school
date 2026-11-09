@@ -19,7 +19,7 @@ FROM ghcr.io/trojsten/django-docker:v8 AS base
 COPY ./docker/Caddyfile /base/Caddyfile
 
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen
+RUN uv sync --frozen --no-cache
 
 COPY --chown=appuser:appuser ./ /app
 COPY --chown=appuser:appuser --from=frontend-build /app/school/static/app.css /app/school/static/bundle.css /app/school/static/bundle.js /app/school/static/
